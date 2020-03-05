@@ -62,7 +62,7 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $tcpPort = Flag::string(['p', 'tcp-port'], '');
+        $tcpPort = Flag::string(['p', 'port'], '');
         if ($tcpPort) {
             $this->server->port = $tcpPort;
         }

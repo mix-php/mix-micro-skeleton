@@ -38,11 +38,8 @@ class CommandListener implements ListenerInterface
         // 守护处理
         if ($event instanceof CommandBeforeExecuteEvent) {
             switch ($event->command) {
-                case \App\Http\Commands\StartCommand::class:
-                case \App\WebSocket\Commands\StartCommand::class:
-                case \App\Tcp\Commands\StartCommand::class:
-                case \App\Udp\Commands\StartCommand::class:
-                case \App\Sync\Commands\StartCommand::class:
+                case \App\JsonRpc\Commands\StartCommand::class:
+                case \App\SyncInvoke\Commands\StartCommand::class:
                     if (Flag::bool(['d', 'daemon'], false)) {
                         ProcessHelper::daemon();
                     }
