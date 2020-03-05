@@ -11,12 +11,12 @@ class Foo
 {
 
     /**
-     * Sum
+     * Bar
      * @param int $a
      * @param int $b
      * @return int
      */
-    public function Sum(int $a, int $b): int
+    public function Bar(int $a, int $b): int
     {
         return $a + $b;
     }
