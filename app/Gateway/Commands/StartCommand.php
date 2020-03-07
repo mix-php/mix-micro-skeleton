@@ -1,20 +1,15 @@
 <?php
 
-namespace App\JsonRpc\Commands;
+namespace App\Gateway\Commands;
 
 use Mix\Console\CommandLine\Flag;
-use Mix\Etcd\Factory\ServiceFactory;
-use Mix\Etcd\Registry;
-use Mix\Etcd\Service\ServiceBundle;
 use Mix\Helper\ProcessHelper;
 use Mix\Log\Logger;
-use Mix\JsonRpc\Server;
-use Mix\Micro\Helper\ServiceHelper;
+use Mix\Micro\Gateway\Server;
 
 /**
  * Class StartCommand
- * @package App\Sync\Commands
- * @author liu,jian <coder.keda@gmail.com>
+ * @package App\Gateway\Commands
  */
 class StartCommand
 {
@@ -25,53 +20,38 @@ class StartCommand
     public $server;
 
     /**
-     * @var Registry
-     */
-    public $registry;
-
-    /**
      * @var Logger
      */
     public $log;
-
-    /**
-     * @var string[]
-     */
-    public $services = [
-        \App\JsonRpc\Services\Foo::class,
-    ];
 
     /**
      * StartCommand constructor.
      */
     public function __construct()
     {
-        $this->log      = context()->get('log');
-        $this->server   = context()->get(Server::class);
-        $this->registry = context()->get(Registry::class);
+        $this->log    = context()->get('log');
+        $this->server = context()->get(Server::class);
     }
 
     /**
      * 主函数
-     * @throws \Swoole\Exception
      */
     public function main()
     {
         // 参数重写
-        $host = Flag::string(['h', 'host'], '');
-        if ($host) {
-            $this->server->host = $host;
+        $port = Flag::string(['p', 'port'], '');
+        if ($port) {
+            $this->server->port = $port;
         }
-        $tcpPort = Flag::string(['p', 'port'], '');
-        if ($tcpPort) {
-            $this->server->port = $tcpPort;
+        $reusePort = Flag::bool(['r', 'reuse-port'], false);
+        if ($reusePort) {
+            $this->server->reusePort = $reusePort;
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('received signal [{signal}]', ['signal' => $signal]);
             $this->log->info('server shutdown');
             $this->server->shutdown();
-            $this->registry->clear();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 启动服务器
@@ -80,27 +60,11 @@ class StartCommand
 
     /**
      * 启动服务器
-     * @throws \Swoole\Exception
-     * @throws \Exception
      */
     public function start()
     {
         $this->welcome();
         $this->log->info('server start');
-        // 注册服务
-        $serviceFactory = new ServiceFactory();
-        $serviceBundle  = new ServiceBundle();
-        foreach ($this->services as $class) {
-            $service = $serviceFactory->createJsonRpcService(
-                sprintf('php.micro.srv.%s', ServiceHelper::className($class)),
-                ServiceHelper::localIP(),
-                $this->server->port
-            );
-            $serviceBundle->add($service);
-            $this->server->register(new $class);
-        }
-        $this->registry->register($serviceBundle);
-        // 启动
         $this->server->start();
     }
 
@@ -111,7 +75,6 @@ class StartCommand
     {
         $phpVersion    = PHP_VERSION;
         $swooleVersion = swoole_version();
-        $host          = $this->server->host;
         $port          = $this->server->port;
         echo <<<EOL
                               ____
@@ -123,12 +86,11 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-jsonrpcd');
+        println('Server         Name:      mix-gatewayd');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
         println('Framework      Version:   ' . \Mix::$version);
-        println("Listen         Addr:      {$host}");
         println("Listen         Port:      {$port}");
     }
 

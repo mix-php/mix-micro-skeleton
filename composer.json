@@ -27,6 +27,9 @@
     "mix/redis": "~2.1.0",
     "mix/cache": "~2.1.0",
     "mix/console": "~2.1.0",
+    "mix/route": "~2.1.0",
+    "mix/http-message": "~2.1.0",
+    "mix/http-server": "~2.1.0",
     "mix/sync-invoke": "~2.1.0",
     "mix/json-rpc": "~2.1.0"
   },
