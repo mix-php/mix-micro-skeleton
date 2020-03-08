@@ -3,13 +3,11 @@
 namespace App\Api\Commands;
 
 use Mix\Console\CommandLine\Flag;
-use Mix\Etcd\Factory\ServiceFactory;
+use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
-use Mix\Etcd\Service\ServiceBundle;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Log\Logger;
-use Mix\Micro\Helper\ServiceHelper;
 use Mix\Route\Router;
 
 /**
@@ -88,16 +86,12 @@ class StartCommand
         $this->welcome();
         $this->log->info('server start');
         // 注册服务
-        $serviceFactory = new ServiceFactory();
-        $serviceBundle  = new ServiceBundle();
-        foreach ($this->route->services() as $name) {
-            $service = $serviceFactory->createJsonRpcService(
-                sprintf('php.micro.api.%s', $name),
-                ServiceHelper::localIP(),
-                $this->server->port
-            );
-            $serviceBundle->add($service);
-        }
+        $serviceBundleFactory = new ServiceBundleFactory();
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromHttp(
+            $this->server,
+            $this->route,
+            'php.micro.api'
+        );
         $this->registry->register($serviceBundle);
         // 启动
         $this->server->start($this->route);

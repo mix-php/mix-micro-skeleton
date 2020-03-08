@@ -3,13 +3,11 @@
 namespace App\JsonRpc\Commands;
 
 use Mix\Console\CommandLine\Flag;
-use Mix\Etcd\Factory\ServiceFactory;
+use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
-use Mix\Etcd\Service\ServiceBundle;
 use Mix\Helper\ProcessHelper;
 use Mix\Log\Logger;
 use Mix\JsonRpc\Server;
-use Mix\Micro\Helper\ServiceHelper;
 
 /**
  * Class StartCommand
@@ -88,17 +86,11 @@ class StartCommand
         $this->welcome();
         $this->log->info('server start');
         // 注册服务
-        $serviceFactory = new ServiceFactory();
-        $serviceBundle  = new ServiceBundle();
-        foreach ($this->services as $class) {
-            $service = $serviceFactory->createJsonRpcService(
-                sprintf('php.micro.srv.%s', ServiceHelper::className($class)),
-                ServiceHelper::localIP(),
-                $this->server->port
-            );
-            $serviceBundle->add($service);
-            $this->server->register(new $class);
-        }
+        $serviceBundleFactory = new ServiceBundleFactory();
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc(
+            $this->server,
+            'php.micro.srv.jsonrpc'
+        );
         $this->registry->register($serviceBundle);
         // 启动
         $this->server->start();
