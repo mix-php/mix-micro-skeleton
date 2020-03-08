@@ -5,7 +5,7 @@ return [
     // 路由
     [
         // 名称
-        'name'       => 'route',
+        'name'       => 'apiRoute',
         // 类路径
         'class'      => \Mix\Route\Router::class,
         // 初始方法

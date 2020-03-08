@@ -46,7 +46,7 @@ class StartCommand
     public function __construct()
     {
         $this->log      = context()->get('log');
-        $this->route    = context()->get('route');
+        $this->route    = context()->get('apiRoute');
         $this->server   = context()->get(Server::class);
         $this->registry = context()->get(Registry::class);
     }
