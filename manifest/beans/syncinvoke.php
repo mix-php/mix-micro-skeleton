@@ -52,6 +52,22 @@ return [
             // port
             9505,
         ],
+        // 属性注入
+        'properties'      => [
+            // 处理器
+            'handler' => ['ref' => \Mix\SyncInvoke\Handler::class],
+        ],
+    ],
+
+    // SyncInvoke处理器
+    [
+        // 类路径
+        'class'      => \Mix\SyncInvoke\Handler::class,
+        // 属性注入
+        'properties' => [
+            // 日志
+            'log' => ['ref' => 'log'],
+        ],
     ],
 
 ];
