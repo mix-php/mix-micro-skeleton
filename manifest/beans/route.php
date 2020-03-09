@@ -19,7 +19,7 @@ return [
                 'id' => '\d+',
             ],
             // 全局中间件
-            'middleware'     => [\App\Api\Middleware\GlobalMiddleware::class],
+            'middleware'     => [\App\Common\Middleware\GlobalMiddleware::class],
             // 路由规则
             'rules'          => [
 
