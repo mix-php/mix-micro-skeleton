@@ -1,17 +1,18 @@
 <?php
 
-namespace App\JsonRpc\Commands;
+namespace App\Web\Commands;
 
 use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
+use Mix\Http\Server\Server;
 use Mix\Log\Logger;
-use Mix\JsonRpc\Server;
+use Mix\Route\Router;
 
 /**
  * Class StartCommand
- * @package App\Sync\Commands
+ * @package App\Web\Commands
  * @author liu,jian <coder.keda@gmail.com>
  */
 class StartCommand
@@ -21,6 +22,11 @@ class StartCommand
      * @var Server
      */
     public $server;
+
+    /**
+     * @var Router
+     */
+    public $route;
 
     /**
      * @var Registry
@@ -33,18 +39,12 @@ class StartCommand
     public $log;
 
     /**
-     * @var string[]
-     */
-    public $services = [
-        \App\JsonRpc\Services\Foo::class,
-    ];
-
-    /**
      * StartCommand constructor.
      */
     public function __construct()
     {
         $this->log      = context()->get('log');
+        $this->route    = context()->get('webRoute');
         $this->server   = context()->get(Server::class);
         $this->registry = context()->get(Registry::class);
     }
@@ -60,16 +60,16 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $tcpPort = Flag::string(['p', 'port'], '');
-        if ($tcpPort) {
-            $this->server->port = $tcpPort;
+        $port = Flag::string(['p', 'port'], '');
+        if ($port) {
+            $this->server->port = (int)$port;
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('received signal [{signal}]', ['signal' => $signal]);
             $this->log->info('server shutdown');
-            $this->server->shutdown();
             $this->registry->clear();
+            $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 启动服务器
@@ -86,18 +86,15 @@ class StartCommand
         $this->welcome();
         $this->log->info('server start');
         // 注册服务
-        foreach ($this->services as $service) {
-            $this->server->register(new $service);
-        }
-        // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc(
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromWeb(
             $this->server,
-            'php.micro.srv.jsonrpc'
+            $this->route,
+            'php.micro.web'
         );
         $this->registry->register($serviceBundle);
         // 启动
-        $this->server->start();
+        $this->server->start($this->route);
     }
 
     /**
@@ -119,7 +116,7 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-jsonrpc');
+        println('Server         Name:      mix-web');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

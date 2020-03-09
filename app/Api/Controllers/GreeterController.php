@@ -2,10 +2,9 @@
 
 namespace App\Api\Controllers;
 
-use Mix\Http\Message\Cookie\Cookie;
+use Common\Helpers\ResponseHelper;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
-use Mix\Http\Message\Stream\ContentStream;
 
 /**
  * Class GreeterController
@@ -27,7 +26,7 @@ class GreeterController
      * Say Hello
      * @param ServerRequest $request
      * @param Response $response
-     * @return mixed
+     * @return Response
      */
     public function sayHello(ServerRequest $request, Response $response)
     {
@@ -35,11 +34,7 @@ class GreeterController
             'code'    => 0,
             'message' => sprintf('hello, %s', $request->getAttribute('name', '?')),
         ];
-        $body = new ContentStream(json_encode($data));
-        $response->withBody($body)
-            ->withContentType('application/json', 'utf-8')
-            ->withStatus(200);
-        return $response;
+        return ResponseHelper::json($response, $data);
     }
 
 }

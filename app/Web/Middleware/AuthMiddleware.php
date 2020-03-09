@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Middleware;
+namespace App\Web\Middleware;
 
 use Common\Helpers\ResponseHelper;
 use Mix\Auth\Authorization;
@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class AuthMiddleware
- * @package App\Api\Middleware
+ * @package App\Web\Middleware
  * @author liu,jian <coder.keda@gmail.com>
  */
 class AuthMiddleware implements MiddlewareInterface

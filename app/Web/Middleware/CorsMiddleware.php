@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Api\Middleware;
+namespace App\Web\Middleware;
 
-use Common\Helpers\ResponseHelper;
-use Mix\Auth\Authorization;
-use Mix\Auth\BearerTokenExtractor;
+use Mix\Http\Message\Factory\StreamFactory;
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Server\Middleware\MiddlewareInterface;
@@ -13,11 +11,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class AuthMiddleware
- * @package App\Api\Middleware
+ * Class CorsMiddleware
+ * @package App\Web\Middleware
  * @author liu,jian <coder.keda@gmail.com>
  */
-class AuthMiddleware implements MiddlewareInterface
+class CorsMiddleware implements MiddlewareInterface
 {
 
     /**
@@ -31,12 +29,7 @@ class AuthMiddleware implements MiddlewareInterface
     public $response;
 
     /**
-     * @var Authorization
-     */
-    public $auth;
-
-    /**
-     * SessionMiddleware constructor.
+     * ActionMiddleware constructor.
      * @param ServerRequest $request
      * @param Response $response
      */
@@ -44,7 +37,6 @@ class AuthMiddleware implements MiddlewareInterface
     {
         $this->request  = $request;
         $this->response = $response;
-        $this->auth     = context()->get('auth');
     }
 
     /**
@@ -56,21 +48,15 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // 权限验证
-        $tokenExtractor = new BearerTokenExtractor($request);
-        try {
-            $payload = $this->auth->getPayload($tokenExtractor);
-        } catch (\Throwable $e) {
-            // 中断执行，返回错误信息
-            $content  = ['code' => 100001, 'message' => 'No access'];
-            $response = ResponseHelper::json($this->response, $content);
+        // 跨域处理
+        $response = $this->response;
+        $response->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'Origin, Accept, Keep-Alive, User-Agent, Cache-Control, Content-Type, X-Requested-With, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS');
+        if ($request->getMethod() == 'OPTIONS') {
+            $response->withBody((new StreamFactory())->createStream(''));
             return $response;
         }
-
-        // 把 JWT Payload 放入 Request 的上下文，方便其他位置调用
-        $context = $this->request->getContext();
-        $context->payload = $payload;
-
         // 继续往下执行
         return $handler->handle($request);
     }
