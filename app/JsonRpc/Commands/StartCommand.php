@@ -115,7 +115,7 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-jsonrpcd');
+        println('Server         Name:      mix-jsonrpc');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

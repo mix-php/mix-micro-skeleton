@@ -86,7 +86,7 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-gatewayd');
+        println('Server         Name:      mix-gateway');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

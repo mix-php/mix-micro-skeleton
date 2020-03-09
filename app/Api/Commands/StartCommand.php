@@ -87,7 +87,7 @@ class StartCommand
         $this->log->info('server start');
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromHttp(
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
             $this->server,
             $this->route,
             'php.micro.api'
@@ -116,7 +116,7 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-apid');
+        println('Server         Name:      mix-api');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
