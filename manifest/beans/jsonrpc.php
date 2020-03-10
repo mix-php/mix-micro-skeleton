@@ -2,27 +2,14 @@
 
 return [
 
-    // JsonRpc客户端
-    [
-        // 类路径
-        'class'      => \Mix\JsonRpc\Client::class,
-        // 属性注入
-        'properties' => [
-            // 拨号器
-            'dialer' => \Mix\JsonRpc\Dialer::class,
-        ],
-    ],
-
     // JsonRpc拨号器
     [
         // 类路径
-        'class'      => \Mix\JsonRpc\Dialer::class,
+        'class'      => \Mix\JsonRpc\Client\Dialer::class,
         // 属性注入
         'properties' => [
-            // host
-            'host' => '127.0.0.1',
-            // port
-            'port' => 9506,
+            // 注册中心
+            'registry' => ['ref' => \Mix\Etcd\Registry::class],
         ],
     ],
 
@@ -33,9 +20,14 @@ return [
         // 构造函数注入
         'constructorArgs' => [
             // host
-            '127.0.0.1',
+            '0.0.0.0',
             // port
             9506,
+        ],
+        // 属性注入
+        'properties'      => [
+            // 事件调度器
+            'dispatcher' => ['ref' => 'event'],
         ],
     ],
 
