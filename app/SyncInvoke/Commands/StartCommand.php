@@ -41,7 +41,7 @@ class StartCommand
     public function main()
     {
         // 参数重写
-        $port = Flag::string(['p', 'port'], '');
+        $port = Flag::int(['p', 'port'], '');
         if ($port) {
             $this->server->port = $port;
         }

@@ -60,9 +60,9 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $port = Flag::string(['p', 'port'], '');
+        $port = Flag::int(['p', 'port'], '');
         if ($port) {
-            $this->server->port = (int)$port;
+            $this->server->port = $port;
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
