@@ -2,7 +2,7 @@
 
 namespace App\Api\Middleware;
 
-use Common\Helpers\ResponseHelper;
+use App\Common\Helpers\ResponseHelper;
 use Mix\Auth\Authorization;
 use Mix\Auth\BearerTokenExtractor;
 use Mix\Http\Message\Response;

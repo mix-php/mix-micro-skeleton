@@ -2,7 +2,7 @@
 
 namespace App\Api\Controllers;
 
-use Common\Helpers\ResponseHelper;
+use App\Common\Helpers\ResponseHelper;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 

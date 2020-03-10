@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Helpers;
+namespace App\Common\Helpers;
 
 use Mix\Helper\JsonHelper;
 use Mix\Helper\XmlHelper;
@@ -10,7 +10,7 @@ use Mix\View\View;
 
 /**
  * Class ResponseHelper
- * @package Common\Api\Helpers
+ * @package App\Common\Helpers
  */
 class ResponseHelper
 {
