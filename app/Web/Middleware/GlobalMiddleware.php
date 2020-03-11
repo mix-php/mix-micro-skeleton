@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Middleware;
+namespace App\Web\Middleware;
 
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
@@ -11,7 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class GlobalMiddleware
- * @package App\Common\Middleware
+ * @package App\Web\Middleware
  */
 class GlobalMiddleware implements MiddlewareInterface
 {

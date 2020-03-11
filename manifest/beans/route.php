@@ -2,7 +2,7 @@
 
 return [
 
-    // 路由
+    // Api路由
     [
         // 名称
         'name'       => 'apiRoute',
@@ -18,17 +18,16 @@ return [
             'patterns'       => [
             ],
             // 全局中间件
-            'middleware'     => [\App\Common\Middleware\GlobalMiddleware::class],
+            'middleware'     => [\App\Api\Middleware\GlobalMiddleware::class],
             // 路由规则
             'rules'          => [
-
                 '/greeter/say/hello' => [[\App\Api\Controllers\GreeterController::class, 'sayHello'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
-
+                'POST /file/upload'  => [[\App\Api\Controllers\FileController::class, 'upload'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
             ],
         ],
     ],
 
-    // 路由
+    // Web路由
     [
         // 名称
         'name'       => 'webRoute',
@@ -45,12 +44,10 @@ return [
                 'id' => '\d+',
             ],
             // 全局中间件
-            'middleware'     => [\App\Common\Middleware\GlobalMiddleware::class],
+            'middleware'     => [\App\Web\Middleware\GlobalMiddleware::class],
             // 路由规则
             'rules'          => [
-
                 '/profile/{id}' => [[\App\Web\Controllers\ProfileController::class, 'index'], 'middleware' => [\App\Web\Middleware\ActionMiddleware::class]],
-
             ],
         ],
     ],
