@@ -2,13 +2,11 @@
 
 namespace App\Api\Commands;
 
+use App\Api\Route\Router;
 use Mix\Console\CommandLine\Flag;
-use Mix\Etcd\Factory\ServiceBundleFactory;
-use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Log\Logger;
-use Mix\Route\Router;
 
 /**
  * Class StartCommand
@@ -24,29 +22,23 @@ class StartCommand
     public $server;
 
     /**
-     * @var Router
-     */
-    public $route;
-
-    /**
-     * @var Registry
-     */
-    public $registry;
-
-    /**
      * @var Logger
      */
     public $log;
+
+    /**
+     * @var Router
+     */
+    public $route;
 
     /**
      * StartCommand constructor.
      */
     public function __construct()
     {
-        $this->log      = context()->get('log');
-        $this->route    = context()->get('apiRoute');
-        $this->server   = context()->get(Server::class);
-        $this->registry = context()->get(Registry::class);
+        $this->log    = context()->get('log');
+        $this->route  = context()->get('apiRoute');
+        $this->server = context()->get(Server::class);
     }
 
     /**
@@ -60,15 +52,18 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $port = Flag::int(['p', 'port'], 0);
+        $port = Flag::int(['p', 'port'], 9502);
         if ($port) {
             $this->server->port = $port;
+        }
+        $reusePort = Flag::bool(['r', 'reuse-port'], false);
+        if ($reusePort) {
+            $this->server->reusePort = $reusePort;
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('received signal [{signal}]', ['signal' => $signal]);
             $this->log->info('server shutdown');
-            $this->registry->clear();
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
@@ -79,22 +74,16 @@ class StartCommand
     /**
      * 启动服务器
      * @throws \Swoole\Exception
-     * @throws \Exception
      */
     public function start()
     {
+        $server = $this->server;
+        $server->set([
+            // ...
+        ]);
         $this->welcome();
         $this->log->info('server start');
-        // 注册服务
-        $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
-            $this->server,
-            $this->route,
-            'php.micro.api'
-        );
-        $this->registry->register($serviceBundle);
-        // 启动
-        $this->server->start($this->route);
+        $server->start($this->route);
     }
 
     /**

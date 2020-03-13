@@ -9,7 +9,7 @@ use Mix\SyncInvoke\Server;
 
 /**
  * Class StartCommand
- * @package App\Sync\Commands
+ * @package App\SyncInvoke\Commands
  * @author liu,jian <coder.keda@gmail.com>
  */
 class StartCommand

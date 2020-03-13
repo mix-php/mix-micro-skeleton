@@ -10,6 +10,8 @@ return [
         'constructorArgs' => [
             // port
             9595,
+            // reusePort
+            false,
         ],
         // 属性注入
         'properties'      => [
@@ -32,10 +34,8 @@ return [
             'registry'     => ['ref' => \Mix\Etcd\Registry::class],
             // 代理超时
             'proxyTimeout' => 30.0,
-            // 日志
-            'log'          => ['ref' => 'log'],
-            // 日志格式
-            'logFormat'    => '{status}|{method}|{uri}|{service}',
+            // 事件调度器
+            'dispatcher'   => ['ref' => 'event'],
         ],
     ],
 

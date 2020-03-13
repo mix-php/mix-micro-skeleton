@@ -3,16 +3,17 @@
 namespace App\Api\Controllers;
 
 use App\Common\Helpers\ResponseHelper;
-use App\Api\Forms\FileForm;
-use Mix\Http\Message\ServerRequest;
+use App\Api\Forms\UserForm;
+use App\Api\Models\UserModel;
 use Mix\Http\Message\Response;
+use Mix\Http\Message\ServerRequest;
 
 /**
- * Class FileController
+ * Class UserController
  * @package App\Api\Controllers
  * @author liu,jian <coder.keda@gmail.com>
  */
-class FileController
+class UserController
 {
 
     /**
@@ -25,26 +26,23 @@ class FileController
     }
 
     /**
-     * Upload
+     * Create
      * @param ServerRequest $request
      * @param Response $response
      * @return Response
      */
-    public function upload(ServerRequest $request, Response $response)
+    public function create(ServerRequest $request, Response $response)
     {
         // 使用表单验证器
-        $form = new FileForm($request->getAttributes(), $request->getUploadedFiles());
-        $form->setScenario('upload');
+        $form = new UserForm($request->getAttributes());
+        $form->setScenario('create');
         if (!$form->validate()) {
             $content = ['code' => 1, 'message' => 'FAILED', 'data' => $form->getErrors()];
             return ResponseHelper::json($response, $content);
         }
 
-        // 保存文件
-        if ($form->file) {
-            $targetPath = app()->basePath . '/runtime/uploads/' . date('Ymd') . '/' . $form->file->getClientFilename();
-            $form->file->moveTo($targetPath);
-        }
+        // 执行保存数据库
+        (new UserModel())->add($form);
 
         // 响应
         $content = ['code' => 0, 'message' => 'OK'];

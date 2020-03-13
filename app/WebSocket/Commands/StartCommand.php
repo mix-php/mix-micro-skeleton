@@ -45,7 +45,7 @@ class StartCommand
      * @var callable[]
      */
     public $patterns = [
-        '/websocket' => \App\WebSocket\Handlers\WebSocketHandler::class,
+        '/websocket/foo' => \App\WebSocket\Handlers\WebSocketHandler::class,
     ];
 
     /**
@@ -54,7 +54,7 @@ class StartCommand
     public function __construct()
     {
         $this->log      = context()->get('log');
-        $this->server   = context()->get('httpServer');
+        $this->server   = context()->get(Server::class);
         $this->registry = context()->get(Registry::class);
         $this->upgrader = new Upgrader();
     }
@@ -70,7 +70,7 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $port = Flag::int(['p', 'port'], 0);
+        $port = Flag::int(['p', 'port'], 9512);
         if ($port) {
             $this->server->port = $port;
         }

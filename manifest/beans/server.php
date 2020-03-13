@@ -9,7 +9,7 @@ return [
         // 构造函数注入
         'constructorArgs' => [
             // host
-            '127.0.0.1',
+            '0.0.0.0',
             // port
             9501,
             // ssl

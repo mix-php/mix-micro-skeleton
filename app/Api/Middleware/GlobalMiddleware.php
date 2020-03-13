@@ -12,6 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Class GlobalMiddleware
  * @package App\Api\Middleware
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class GlobalMiddleware implements MiddlewareInterface
 {
