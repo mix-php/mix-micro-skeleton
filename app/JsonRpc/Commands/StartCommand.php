@@ -93,7 +93,7 @@ class StartCommand
         $serviceBundleFactory = new ServiceBundleFactory();
         $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc(
             $this->server,
-            'php.micro.srv.jsonrpc'
+            'php.micro.jsonrpc'
         );
         $this->registry->register($serviceBundle);
         // 启动

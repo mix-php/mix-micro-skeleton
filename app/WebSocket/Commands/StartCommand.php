@@ -45,7 +45,7 @@ class StartCommand
      * @var callable[]
      */
     public $patterns = [
-        '/websocket/foo' => \App\WebSocket\Handlers\WebSocketHandler::class,
+        '/websocket' => \App\WebSocket\Handlers\WebSocketHandler::class,
     ];
 
     /**

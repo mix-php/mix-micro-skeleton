@@ -15,42 +15,16 @@ return [
         ],
         // 属性注入
         'properties'      => [
-            // 处理器
-            'handler' => ['ref' => \Mix\Micro\Gateway\Handler::class],
-        ],
-    ],
-
-    // Gateway处理器
-    [
-        // 类路径
-        'class'      => \Mix\Micro\Gateway\Handler::class,
-        // 初始方法
-        'initMethod' => 'init',
-        // 属性注入
-        'properties' => [
-            // 代理的命名空间
-            'namespaces'   => ['ref' => \Mix\Micro\Gateway\Namespaces::class],
-            // 服务注册器
-            'registry'     => ['ref' => \Mix\Etcd\Registry::class],
-            // 代理超时
-            'proxyTimeout' => 30.0,
+            // 代理器集合
+            'proxies'    => [
+                \Mix\Micro\Gateway\Proxy\WebProxy::class,
+                \Mix\Micro\Gateway\Proxy\ApiProxy::class,
+                \Mix\Micro\Gateway\Proxy\JsonRpcProxy::class,
+            ],
+            // 注册中心
+            'registry'   => ['ref' => \Mix\Etcd\Registry::class],
             // 事件调度器
-            'dispatcher'   => ['ref' => 'event'],
-        ],
-    ],
-
-    // 代理的命名空间
-    [
-        // 类路径
-        'class'      => \Mix\Micro\Gateway\Namespaces::class,
-        // 属性注入
-        'properties' => [
-            // api
-            'api'     => 'php.micro.api',
-            // web
-            'web'     => 'php.micro.web',
-            // jsonrpc
-            'jsonrpc' => 'php.micro.srv.jsonrpc',
+            'dispatcher' => ['ref' => 'event'],
         ],
     ],
 
