@@ -29,8 +29,7 @@ class StartCommand
      */
     public function __construct()
     {
-        $this->log    = context()->get('log');
-        $this->server = context()->get(Server::class);
+        $this->log = context()->get('log');
     }
 
     /**
@@ -40,7 +39,19 @@ class StartCommand
     public function main()
     {
         // 参数重写
-        $port = Flag::int(['p', 'port'], 0);
+        $serverName = Flag::string(['n', 'server-name'], 'web');
+        switch ($serverName) {
+            case 'web':
+                $serverName = 'webGatewayServer';
+                break;
+            case 'api':
+                $serverName = 'apiGatewayServer';
+                break;
+            default:
+                $serverName = 'webGatewayServer';
+        }
+        $this->server = context()->get($serverName);
+        $port         = Flag::int(['p', 'port'], 0);
         if ($port) {
             $this->server->port = $port;
         }
