@@ -51,7 +51,7 @@ class GatewayListener implements ListenerInterface
             return;
         }
         $level   = $event->status == 502 ? 'warning' : 'info';
-        $message = '{time}|{status}|{method}|{protocol}|{request_uri}|{service}';
+        $message = '{time}|{status}|{method}|{protocol}|{request_uri}|{service}|{error}';
         $service = $event->service;
         $context = [
             'time'        => $event->time,
@@ -60,6 +60,7 @@ class GatewayListener implements ListenerInterface
             'protocol'    => ProxyHelper::isWebSocket($event->request) ? 'WS' : 'HTTP',
             'request_uri' => ProxyHelper::getRequestUri($event->request->getUri()),
             'service'     => $service ? sprintf('service:%s,addr:%s:%s', $service->getName(), $service->getAddress(), $service->getPort()) : '',
+            'error'       => $event->error,
         ];
         $this->log->log($level, $message, $context);
     }
