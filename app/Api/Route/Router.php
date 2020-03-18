@@ -19,10 +19,14 @@ class Router extends \Mix\Route\Router
      */
     public function show404(\Exception $exception, Response $response)
     {
-        $content = '404 Not Found';
-        $body    = (new StreamFactory())->createStream($content);
+        $content = [
+            'code'    => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'status'  => '404 Not Found',
+        ];
+        $body    = (new StreamFactory())->createStream(json_encode($content));
         $response
-            ->withContentType('text/plain')
+            ->withContentType('application/json', 'utf-8')
             ->withBody($body)
             ->withStatus(404)
             ->end();
@@ -36,13 +40,11 @@ class Router extends \Mix\Route\Router
     public function show500(\Exception $exception, Response $response)
     {
         $content = [
-            'error' => [
-                'message' => $exception->getMessage(),
-                'code'    => $exception->getCode(),
-                'type'    => get_class($exception),
-            ],
+            'code'    => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'status'  => '500 Internal Server Error',
         ];
-        $body    = (new StreamFactory())->createStream(json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $body    = (new StreamFactory())->createStream(json_encode($content));
         $response
             ->withContentType('application/json', 'utf-8')
             ->withBody($body)
