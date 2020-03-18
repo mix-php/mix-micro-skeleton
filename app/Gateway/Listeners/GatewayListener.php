@@ -50,7 +50,7 @@ class GatewayListener implements ListenerInterface
         if (!$event instanceof AccessEvent) {
             return;
         }
-        $level   = $event->status == 502 ? 'warning' : 'info';
+        $level   = $event->status != 200 || $event->error ? 'warning' : 'info';
         $message = '{time}|{status}|{method}|{protocol}|{request_uri}|{service}|{error}';
         $service = $event->service;
         $context = [
