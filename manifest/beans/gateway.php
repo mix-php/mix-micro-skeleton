@@ -24,6 +24,8 @@ return [
                 // Json-rpc代理
                 ['ref' => \Mix\Micro\Gateway\Proxy\JsonRpcProxy::class],
             ],
+            // 中间件
+            'middleware' => [\App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
             'registry'   => ['ref' => \Mix\Etcd\Registry::class],
             // 事件调度器
@@ -51,7 +53,7 @@ return [
         // 属性注入
         'properties' => [
             // 命名空间
-            'namespace' => 'php.micro.web',
+            'namespace' => 'php.micro.api',
             // 超时
             'timeout'   => 5,
         ],
