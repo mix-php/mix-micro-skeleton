@@ -82,7 +82,7 @@ class StartCommand
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('received signal [{signal}]', ['signal' => $signal]);
             $this->log->info('server shutdown');
-            $this->registry->clear();
+            $this->registry->close();
             $this->server->shutdown();
             $this->upgrader->destroy();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
