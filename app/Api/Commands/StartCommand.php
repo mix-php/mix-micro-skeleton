@@ -4,6 +4,7 @@ namespace App\Api\Commands;
 
 use App\Api\Route\Router;
 use Mix\Console\CommandLine\Flag;
+use Mix\Etcd\Config;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Log\Logger;
@@ -20,6 +21,11 @@ class StartCommand
      * @var Server
      */
     public $server;
+
+    /**
+     * @var Config
+     */
+    public $config;
 
     /**
      * @var Logger
@@ -39,6 +45,7 @@ class StartCommand
         $this->log    = context()->get('log');
         $this->route  = context()->get('apiRoute');
         $this->server = context()->get(Server::class);
+        $this->config = context()->get(Config::class);
     }
 
     /**
@@ -67,6 +74,8 @@ class StartCommand
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
+        // 监听配置
+        $this->config->listen();
         // 启动服务器
         $this->start();
     }

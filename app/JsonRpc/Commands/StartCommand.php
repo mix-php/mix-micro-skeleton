@@ -3,6 +3,7 @@
 namespace App\JsonRpc\Commands;
 
 use Mix\Console\CommandLine\Flag;
+use Mix\Etcd\Config;
 use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
@@ -21,6 +22,11 @@ class StartCommand
      * @var Server
      */
     public $server;
+
+    /**
+     * @var Config
+     */
+    public $config;
 
     /**
      * @var Registry
@@ -46,6 +52,7 @@ class StartCommand
     {
         $this->log      = context()->get('log');
         $this->server   = context()->get(Server::class);
+        $this->config   = context()->get(Config::class);
         $this->registry = context()->get(Registry::class);
     }
 
@@ -72,6 +79,8 @@ class StartCommand
             $this->registry->close();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
+        // 监听配置
+        $this->config->listen();
         // 启动服务器
         $this->start();
     }
