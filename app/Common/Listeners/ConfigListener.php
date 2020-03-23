@@ -3,6 +3,7 @@
 namespace App\Common\Listeners;
 
 use Mix\Event\ListenerInterface;
+use Mix\Micro\Config\Event\DeleteEvent;
 use Mix\Micro\Config\Event\PutEvent;
 
 /**
@@ -21,6 +22,7 @@ class ConfigListener implements ListenerInterface
     {
         return [
             PutEvent::class,
+            DeleteEvent::class,
         ];
     }
 
@@ -35,7 +37,7 @@ class ConfigListener implements ListenerInterface
                 case '/mix/app/app_debug':
                     app()->appDebug = (bool)$event->value;
                     break;
-                case '/mix/database':
+                case '/mix/app/database':
                     $db     = json_decode($event->value, true);
                     $dialer = context()->getBeanDefinition(\Mix\Database\Pool\Dialer::class);
                     foreach ($db as $key => $value) {
@@ -43,7 +45,7 @@ class ConfigListener implements ListenerInterface
                     }
                     $dbPool = context()->getBeanDefinition('dbPool');
                     $dbPool->refresh();
-                case '/mix/redis':
+                case '/mix/app/redis':
                     $redis  = json_decode($event->value, true);
                     $dialer = context()->getBeanDefinition(\Mix\Redis\Pool\Dialer::class);
                     foreach ($redis as $key => $value) {

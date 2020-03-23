@@ -17,6 +17,9 @@ class ConfigPutCommand
      */
     public $config;
 
+    /**
+     * ConfigPutCommand constructor.
+     */
     public function __construct()
     {
         $this->config = context()->get(Config::class);
@@ -31,12 +34,12 @@ class ConfigPutCommand
         // key value 都只可为 string
         $config->put([
             '/mix/app/app_debug' => '1',
-            '/mix/database'      => json_encode([
+            '/mix/app/database'  => json_encode([
                 'dsn'      => 'mysql:host=127.0.0.1;port=3306;charset=utf8;dbname=test',
                 'username' => 'root',
                 'password' => '',
             ]),
-            '/mix/redis'         => json_encode([
+            '/mix/app/redis'     => json_encode([
                 'host'     => '127.0.0.1',
                 'port'     => 6379,
                 'database' => 0,
