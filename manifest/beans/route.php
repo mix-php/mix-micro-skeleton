@@ -24,8 +24,6 @@ return [
                 // 普通路由
                 '/greeter/say/hello' => [[\App\Api\Controllers\Greeter\SayController::class, 'hello'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
                 'POST /file/upload'  => [[\App\Api\Controllers\FileController::class, 'upload'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
-                '/curl'              => [[\App\Api\Controllers\CurlController::class, 'index'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
-                '/jsonrpc'           => [[\App\Api\Controllers\JsonRpcController::class, 'index'], 'middleware' => [\App\Api\Middleware\ActionMiddleware::class]],
                 // 分组路由
                 '/v2'                => [
                     // 分组中间件
