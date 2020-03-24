@@ -31,6 +31,10 @@ class ProfileController
      */
     public function index(ServerRequest $request, Response $response)
     {
+        // 调用rpc获取用户信息
+        // ...
+
+        // 渲染数据
         $data = [
             'id'      => $request->getAttribute('id'),
             'name'    => '小明',

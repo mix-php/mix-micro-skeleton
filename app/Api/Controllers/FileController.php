@@ -41,6 +41,7 @@ class FileController
         }
 
         // 保存文件
+        // 微服务中文件应该保存到云服务或者自行搭建的文件服务器
         if ($form->file) {
             $targetPath = app()->basePath . '/runtime/uploads/' . date('Ymd') . '/' . $form->file->getClientFilename();
             $form->file->moveTo($targetPath);

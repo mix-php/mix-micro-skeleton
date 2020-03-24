@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\JsonRpc\Services;
 
 use App\Common\Helpers\ResponseHelper;
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
@@ -9,11 +9,10 @@ use Mix\Http\Message\ServerRequest;
 use Mix\SyncInvoke\Pool\ConnectionPool;
 
 /**
- * Class CurlController
- * @package App\Api\Controllers
- * @author liu,jian <coder.keda@gmail.com>
+ * Class CurlService
+ * @package App\JsonRpc\Services
  */
-class CurlController
+class CurlService
 {
 
     /**
@@ -73,7 +72,7 @@ class CurlController
              * 该方式传输数据少，但 class 内部代码修改后需要重启 mix-syncinvoke 服务器进程
              *
 
-            $curl = new \App\Api\SyncInvoke\Curl();
+            $curl = new \App\JsonRpc\SyncInvoke\Curl();
             return $curl->exec();
 
              */

@@ -42,7 +42,7 @@ class StartCommand
      * @var string[]
      */
     public $services = [
-        \App\JsonRpc\Services\Foo::class,
+        \App\JsonRpc\Services\User::class,
     ];
 
     /**
@@ -96,7 +96,7 @@ class StartCommand
         $this->log->info('server start');
         // 注册服务
         foreach ($this->services as $service) {
-            $this->server->register(new $service);
+            $this->server->register(new $service, 'App\JsonRpc\Services', 'Service');
         }
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();

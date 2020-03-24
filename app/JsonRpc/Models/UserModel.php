@@ -28,16 +28,16 @@ class UserModel
 
     /**
      * 新增用户
-     * @param UserForm $model
+     * @param array $user
      * @return bool|string
      */
-    public function add(UserForm $form)
+    public function add(array $user)
     {
         $db       = $this->pool->getConnection();
         $status   = $db->insert('user', [
-            'name'  => $form->name,
-            'age'   => $form->age,
-            'email' => $form->email,
+            'name'  => $user['name'],
+            'age'   => $user['age'],
+            'email' => $user['email'],
         ])->execute();
         $insertId = $status ? $db->getLastInsertId() : false;
         $db->release();
