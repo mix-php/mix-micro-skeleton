@@ -15,7 +15,7 @@ return [
             // 端口
             'port'     => 2379,
             // 用户
-            'user'     => 'root',
+            'user'     => 'admin',
             // 密码
             'password' => '',
             // 生存时间 (服务注册)
@@ -38,9 +38,9 @@ return [
             // 端口
             'port'       => 2379,
             // 用户
-            'user'       => 'test',
+            'user'       => 'admin',
             // 密码
-            'password'   => '123456',
+            'password'   => '',
             // 刷新间隔
             'interval'   => 5,
             // 名称空间

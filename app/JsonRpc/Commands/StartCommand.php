@@ -42,7 +42,9 @@ class StartCommand
      * @var string[]
      */
     public $services = [
-        \App\JsonRpc\Services\User::class,
+        \App\JsonRpc\Services\Greeter\SayService::class,
+        \App\JsonRpc\Services\CurlService::class,
+        \App\JsonRpc\Services\UserService::class,
     ];
 
     /**

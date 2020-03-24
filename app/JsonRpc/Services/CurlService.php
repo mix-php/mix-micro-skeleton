@@ -2,10 +2,7 @@
 
 namespace App\JsonRpc\Services;
 
-use App\Common\Helpers\ResponseHelper;
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
-use Mix\Http\Message\Response;
-use Mix\Http\Message\ServerRequest;
 use Mix\SyncInvoke\Pool\ConnectionPool;
 
 /**
@@ -23,23 +20,22 @@ class CurlService
     /**
      * CurlController constructor.
      */
-    public function __construct(ServerRequest $request, Response $response)
+    public function __construct()
     {
         $this->pool = context()->get(ConnectionPool::class);
     }
 
     /**
-     * Index
-     * @param ServerRequest $request
-     * @param Response $response
-     * @return Response
+     * Get
+     * @param string $url
+     * @return string
      * @throws \Mix\SyncInvoke\Exception\InvokeException
      * @throws \Swoole\Exception
      */
-    public function index(ServerRequest $request, Response $response)
+    public function Get(string $url): string
     {
         // 跨进程执行同步代码
-        $data = SyncInvokeHelper::invoke($this->pool, function () {
+        $data = SyncInvokeHelper::invoke($this->pool, function () use ($url) {
             /**
              * 闭包内部的同步阻塞代码会在同步服务器进程中执行
              * 代码异常会抛出 InvokeException，即便指定 throw new FooException() 也会转换为 InvokeException
@@ -52,7 +48,7 @@ class CurlService
              */
             $curl = curl_init();
             curl_setopt_array($curl, [
-                CURLOPT_URL            => "http://ip-api.com/json/?lang=zh-CN",
+                CURLOPT_URL            => $url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_MAXREDIRS      => 10,
                 CURLOPT_TIMEOUT        => 30,
@@ -63,23 +59,11 @@ class CurlService
             $err      = curl_error($curl);
             curl_close($curl);
             if ($err) {
-                return ['error' => "cURL Error #: " . $err];
+                return "cURL Error #: " . $err;
             }
-            return json_decode($response, true);
-
-            /*
-             * 也可使用代码中包含 class 的方式
-             * 该方式传输数据少，但 class 内部代码修改后需要重启 mix-syncinvoke 服务器进程
-             *
-
-            $curl = new \App\JsonRpc\SyncInvoke\Curl();
-            return $curl->exec();
-
-             */
+            return $response;
         });
-        // 响应
-        $content = ['code' => 0, 'message' => 'OK', 'data' => $data];
-        return ResponseHelper::json($response, $content);
+        return $data;
     }
 
 }
