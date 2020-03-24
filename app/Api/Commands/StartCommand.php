@@ -5,6 +5,8 @@ namespace App\Api\Commands;
 use App\Api\Route\Router;
 use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Config;
+use Mix\Etcd\Factory\ServiceBundleFactory;
+use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Log\Logger;
@@ -28,6 +30,11 @@ class StartCommand
     public $config;
 
     /**
+     * @var Registry
+     */
+    public $registry;
+
+    /**
      * @var Logger
      */
     public $log;
@@ -42,10 +49,11 @@ class StartCommand
      */
     public function __construct()
     {
-        $this->log    = context()->get('log');
-        $this->route  = context()->get('apiRoute');
-        $this->server = context()->get(Server::class);
-        $this->config = context()->get(Config::class);
+        $this->log      = context()->get('log');
+        $this->route    = context()->get('apiRoute');
+        $this->server   = context()->get(Server::class);
+        $this->config   = context()->get(Config::class);
+        $this->registry = context()->get(Registry::class);
     }
 
     /**
@@ -83,16 +91,22 @@ class StartCommand
     /**
      * 启动服务器
      * @throws \Swoole\Exception
+     * @throws \Exception
      */
     public function start()
     {
-        $server = $this->server;
-        $server->set([
-            // ...
-        ]);
         $this->welcome();
         $this->log->info('server start');
-        $server->start($this->route);
+        // 注册服务
+        $serviceBundleFactory = new ServiceBundleFactory();
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
+            $this->server,
+            $this->route,
+            'php.micro.api'
+        );
+        $this->registry->register($serviceBundle);
+        // 启动
+        $this->server->start($this->route);
     }
 
     /**

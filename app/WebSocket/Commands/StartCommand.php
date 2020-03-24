@@ -107,16 +107,12 @@ class StartCommand
      */
     public function start()
     {
-        $server = $this->server;
         $this->welcome();
         $this->log->info('server start');
         // 设置处理程序
         foreach (array_keys($this->patterns) as $pattern) {
-            $server->handle($pattern, [$this, 'handle']);
+            $this->server->handle($pattern, [$this, 'handle']);
         }
-        $server->set([
-            //...
-        ]);
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();
         $serviceBundle        = $serviceBundleFactory->createServiceBundleFromWeb(
@@ -126,7 +122,7 @@ class StartCommand
         );
         $this->registry->register($serviceBundle);
         // 启动
-        $server->start();
+        $this->server->start();
     }
 
     /**
