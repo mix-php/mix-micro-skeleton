@@ -76,6 +76,7 @@ class StartCommand
             $this->log->info('received signal [{signal}]', ['signal' => $signal]);
             $this->log->info('server shutdown');
             $this->registry->close();
+            $this->config->close();
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
