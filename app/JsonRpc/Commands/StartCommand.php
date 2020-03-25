@@ -69,9 +69,13 @@ class StartCommand
         if ($host) {
             $this->server->host = $host;
         }
-        $tcpPort = Flag::int(['p', 'port'], 0);
-        if ($tcpPort) {
-            $this->server->port = $tcpPort;
+        $port = Flag::int(['p', 'port'], 0);
+        if ($port) {
+            $this->server->port = $port;
+        }
+        $reusePort = Flag::bool(['r', 'reuse-port'], false);
+        if ($reusePort) {
+            $this->server->reusePort = $reusePort;
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
