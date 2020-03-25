@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Api\Models;
+namespace App\JsonRpc\Models;
 
-use App\Api\Forms\UserForm;
 use Mix\Database\Pool\ConnectionPool;
 
 /**
  * Class UserModel
- * @package App\Api\Models
+ * @package App\JsonRpc\Models
  * @author liu,jian <coder.keda@gmail.com>
  */
 class UserModel

@@ -2,7 +2,7 @@
 
 namespace App\JsonRpc\Services;
 
-use App\Api\Models\UserModel;
+use App\JsonRpc\Models\UserModel;
 
 /**
  * Class UserService
