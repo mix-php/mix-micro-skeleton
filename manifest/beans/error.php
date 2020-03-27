@@ -16,6 +16,8 @@ return [
             E_ALL,
             // 日志
             ['ref' => 'log'],
+            // 事件调度器
+            ['ref' => 'event'],
         ],
     ],
 
