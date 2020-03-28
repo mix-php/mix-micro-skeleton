@@ -44,12 +44,14 @@ return [
         'class'      => \Mix\Log\FileHandler::class,
         // 属性注入
         'properties' => [
-            // 日志目录
-            'dir'         => realpath(__DIR__ . '/../../runtime') . '/logs',
-            // 日志轮转类型
-            'rotate'      => \Mix\Log\FileHandler::ROTATE_DAY,
+            // 日志名称
+            'filename'    => realpath(__DIR__ . '/../../runtime') . '/logs/mix.log',
+            // 开启轮转
+            'rotate'      => true,
             // 最大文件尺寸
             'maxFileSize' => 0,
+            // 最大保留天数
+            'maxDays'     => 7,
         ],
     ],
 
