@@ -31,7 +31,8 @@
     "mix/http-message": "~2.1.0",
     "mix/http-server": "~2.1.0",
     "mix/sync-invoke": "~2.1.0",
-    "mix/json-rpc": "~2.1.0"
+    "mix/json-rpc": "~2.1.0",
+    "mix/guzzle": "~2.1.0"
   },
   "require-dev": {
     "swoole/ide-helper": "dev-master"
