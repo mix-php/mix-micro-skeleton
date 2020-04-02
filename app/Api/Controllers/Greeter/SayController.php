@@ -7,6 +7,7 @@ use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\JsonRpc\Client\Dialer;
 use Mix\JsonRpc\Factory\RequestFactory;
+use Mix\Micro\Breaker\CircuitBreaker;
 
 /**
  * Class SayController
@@ -21,13 +22,19 @@ class SayController
     public $dialer;
 
     /**
+     * @var CircuitBreaker
+     */
+    public $breaker;
+
+    /**
      * FileController constructor.
      * @param ServerRequest $request
      * @param Response $response
      */
     public function __construct(ServerRequest $request, Response $response)
     {
-        $this->dialer = context()->get(Dialer::class);
+        $this->dialer  = context()->get(Dialer::class);
+        $this->breaker = context()->get(CircuitBreaker::class);
     }
 
     /**
@@ -35,27 +42,33 @@ class SayController
      * @param ServerRequest $request
      * @param Response $response
      * @return Response
-     * @throws \Mix\JsonRpc\Exception\ParseException
-     * @throws \PhpDocReader\AnnotationException
-     * @throws \ReflectionException
-     * @throws \Swoole\Exception
      */
     public function hello(ServerRequest $request, Response $response)
     {
         $name = $request->getAttribute('name', '?');
 
-        // 调用rpc
-        $conn        = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
-        $rpcRequest  = (new RequestFactory)->createRequest('Say.Hello', [$name], 10001);
-        $rpcResponse = $conn->call($rpcRequest);
-        if ($rpcResponse->error) {
-            $error = $rpcResponse->error;
-            throw new \Exception(sprintf('RPC call failed: %s', $error->message), $error->code);
-        }
+        /**
+         * 使用熔断器调用
+         * @var \Mix\JsonRpc\Message\Response $rpcResponse
+         */
+        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($name) {
+            // 调用rpc
+            $conn        = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
+            $rpcRequest  = (new RequestFactory)->createRequest('Say.Hello', [$name], 10001);
+            $rpcResponse = $conn->call($rpcRequest);
+            if ($rpcResponse->error) {
+                $error = $rpcResponse->error;
+                throw new \Exception(sprintf('RPC call failed: %s', $error->message), $error->code);
+            }
+            return $rpcResponse->result;
+        }, function () use ($name) {
+            // 返回本地数据或抛出异常
+            return [sprintf('hello, %s', $name)];
+        });
 
         $data = [
             'code'    => 0,
-            'message' => array_pop($rpcResponse->result),
+            'message' => array_pop($result),
         ];
         return ResponseHelper::json($response, $data);
     }
