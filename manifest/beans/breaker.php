@@ -27,8 +27,11 @@ return [
                     'sleepWindow'            => 10,
                 ],
             ],
+        ],
+        // 属性注入
+        'properties'      => [
             // 事件调度器
-            ['ref' => 'event'],
+            'dispatcher' => ['ref' => 'event'],
         ],
     ],
 
