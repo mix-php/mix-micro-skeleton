@@ -13,18 +13,25 @@ return [
         // 属性注入
         'properties' => [
             // 主机
-            'host'     => '127.0.0.1',
+            'host'           => '127.0.0.1',
             // 端口
-            'port'     => 2379,
+            'port'           => 2379,
             // 用户
-            'user'     => 'test',
+            'user'           => 'root',
             // 密码
-            'password' => '123456',
-            // 生存时间 (服务注册)
-            'ttl'      => 5,
-            // 空闲时间 (服务发现)
-            'idle'     => 30,
+            'password'       => '',
+            // 服务注册生存时间
+            'registerTTL'    => 5,
+            // 服务监控最大空闲时间
+            'monitorMaxIdle' => 30,
+            // 负载均衡器
+            'loadBalancer'   => ['ref' => \Mix\Etcd\LoadBalancer\RoundRobinBalancer::class],
         ],
+    ],
+
+    // 负载均衡器
+    [
+        'class' => \Mix\Etcd\LoadBalancer\RoundRobinBalancer::class,
     ],
 
     // 配置中心
@@ -42,9 +49,9 @@ return [
             // 端口
             'port'       => 2379,
             // 用户
-            'user'       => 'test',
+            'user'       => 'root',
             // 密码
-            'password'   => '123456',
+            'password'   => '',
             // 刷新间隔
             'interval'   => 5,
             // 名称空间
