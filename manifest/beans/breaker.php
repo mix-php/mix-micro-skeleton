@@ -27,6 +27,8 @@ return [
                     'sleepWindow'            => 10,
                 ],
             ],
+            // 事件调度器
+            ['ref' => 'event'],
         ],
     ],
 
