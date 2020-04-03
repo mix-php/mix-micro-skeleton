@@ -3,6 +3,7 @@
 namespace App\JsonRpc\Services;
 
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
+use Mix\JsonRpc\Message\Request;
 use Mix\SyncInvoke\Pool\ConnectionPool;
 
 /**
@@ -18,9 +19,10 @@ class CurlService
     public $pool;
 
     /**
-     * CurlController constructor.
+     * CurlService constructor.
+     * @param Request $request
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->pool = context()->get(ConnectionPool::class);
     }

@@ -41,7 +41,7 @@ class StartCommand
     /**
      * @var string[]
      */
-    public $services = [
+    public $classes = [
         \App\JsonRpc\Services\Greeter\SayService::class,
         \App\JsonRpc\Services\CurlService::class,
         \App\JsonRpc\Services\UserService::class,
@@ -102,8 +102,8 @@ class StartCommand
         $this->welcome();
         $this->log->info('server start');
         // 注册服务
-        foreach ($this->services as $service) {
-            $this->server->register(new $service, 'App\JsonRpc\Services', 'Service');
+        foreach ($this->classes as $class) {
+            $this->server->register($class, 'App\JsonRpc\Services', 'Service');
         }
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();

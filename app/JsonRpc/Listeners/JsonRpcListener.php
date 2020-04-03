@@ -53,7 +53,7 @@ class JsonRpcListener implements ListenerInterface
         $message = '{time}|{method}|{error}';
         $context = [
             'time'   => $event->time,
-            'method' => $event->method,
+            'method' => $event->request->method,
             'error'  => $event->error,
         ];
         $this->log->log($level, $message, $context);

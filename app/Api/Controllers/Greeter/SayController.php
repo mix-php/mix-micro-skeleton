@@ -7,6 +7,7 @@ use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\JsonRpc\Client\Dialer;
 use Mix\JsonRpc\Factory\RequestFactory;
+use Mix\JsonRpc\Helper\JsonRpcHelper;
 use Mix\Micro\Breaker\CircuitBreaker;
 
 /**
@@ -47,15 +48,13 @@ class SayController
     {
         $name = $request->getAttribute('name', '?');
 
-        /**
-         * 使用熔断器调用
-         * @var \Mix\JsonRpc\Message\Response $rpcResponse
-         */
-        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($name) {
+        // 使用熔断器调用
+        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
             // 调用rpc
-            $conn        = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
-            $rpcRequest  = (new RequestFactory)->createRequest('Say.Hello', [$name], 10001);
-            $rpcResponse = $conn->call($rpcRequest);
+            $conn                 = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
+            $rpcRequest           = (new RequestFactory)->createRequest('Say.Hello', [$name], 10001);
+            $rpcRequest->metadata = JsonRpcHelper::parseMetadata($request);
+            $rpcResponse          = $conn->call($rpcRequest);
             if ($rpcResponse->error) {
                 $error = $rpcResponse->error;
                 throw new \Exception(sprintf('RPC call failed: %s', $error->message), $error->code);
