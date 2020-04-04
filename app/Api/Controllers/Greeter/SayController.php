@@ -52,8 +52,7 @@ class SayController
         $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
             // 调用rpc
             $conn                 = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
-            $rpcRequest           = (new RequestFactory)->createRequest('Say.Hello', [$name], 10001);
-            $rpcRequest->metadata = JsonRpcHelper::parseMetadata($request);
+            $rpcRequest           = (new RequestFactory)->createRequest('Say.Hello', [$name]);
             $rpcResponse          = $conn->call($rpcRequest);
             if ($rpcResponse->error) {
                 $error = $rpcResponse->error;

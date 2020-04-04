@@ -13,10 +13,10 @@ class UserService
 
     /**
      * Add
-     * @param array $user
+     * @param object $user
      * @return array
      */
-    public function Add(array $user): array
+    public function Add(object $user): array
     {
         $model = new UserModel();
         $model->add($user);
