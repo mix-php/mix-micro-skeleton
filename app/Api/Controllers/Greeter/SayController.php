@@ -7,8 +7,7 @@ use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\JsonRpc\Client\Dialer;
 use Mix\JsonRpc\Factory\RequestFactory;
-use Mix\JsonRpc\Helper\JsonRpcHelper;
-use Mix\Micro\Breaker\CircuitBreaker;
+use Mix\Micro\Hystrix\CircuitBreaker;
 
 /**
  * Class SayController
