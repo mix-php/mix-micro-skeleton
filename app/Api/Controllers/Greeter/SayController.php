@@ -8,6 +8,8 @@ use Mix\Http\Message\Response;
 use Mix\JsonRpc\Client\Dialer;
 use Mix\JsonRpc\Factory\RequestFactory;
 use Mix\Micro\Hystrix\CircuitBreaker;
+use Mix\Zipkin\Middleware\JsonRpc\TracingClientMiddleware;
+use Mix\Zipkin\Tracing;
 
 /**
  * Class SayController
@@ -50,9 +52,11 @@ class SayController
         // 使用熔断器调用
         $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
             // 调用rpc
-            $conn                 = $this->dialer->dialFromService('php.micro.jsonrpc.greeter');
-            $rpcRequest           = (new RequestFactory)->createRequest('Say.Hello', [$name]);
-            $rpcResponse          = $conn->call($rpcRequest);
+            $tracer      = Tracing::extract($request->getContext());
+            $middleware  = new TracingClientMiddleware($tracer);
+            $conn        = $this->dialer->dialFromService('php.micro.jsonrpc.greeter', $middleware);
+            $rpcRequest  = (new RequestFactory)->createRequest('Say.Hello', [$name]);
+            $rpcResponse = $conn->call($rpcRequest);
             if ($rpcResponse->error) {
                 $error = $rpcResponse->error;
                 throw new \Exception(sprintf('RPC call failed: %s', $error->message), $error->code);

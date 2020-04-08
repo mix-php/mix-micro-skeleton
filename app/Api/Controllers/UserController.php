@@ -23,11 +23,9 @@ class UserController
     public $dialer;
 
     /**
-     * FileController constructor.
-     * @param ServerRequest $request
-     * @param Response $response
+     * UserController constructor.
      */
-    public function __construct(ServerRequest $request, Response $response)
+    public function __construct()
     {
         $this->dialer = context()->get(Dialer::class);
     }

@@ -3,6 +3,7 @@
 namespace App\JsonRpc\Services;
 
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
+use Mix\JsonRpc\Message\Context;
 use Mix\JsonRpc\Message\Request;
 use Mix\SyncInvoke\Pool\ConnectionPool;
 
@@ -20,21 +21,21 @@ class CurlService
 
     /**
      * CurlService constructor.
-     * @param Request $request
      */
-    public function __construct(Request $request)
+    public function __construct()
     {
         $this->pool = context()->get(ConnectionPool::class);
     }
 
     /**
      * Get
+     * @param Context $context
      * @param string $url
      * @return string
      * @throws \Mix\SyncInvoke\Exception\InvokeException
      * @throws \Swoole\Exception
      */
-    public function Get(string $url): string
+    public function Get(Context $context, string $url): string
     {
         // 跨进程执行同步代码
         $data = SyncInvokeHelper::invoke($this->pool, function () use ($url) {
