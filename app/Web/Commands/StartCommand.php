@@ -3,7 +3,7 @@
 namespace App\Web\Commands;
 
 use Mix\Console\CommandLine\Flag;
-use Mix\Etcd\Config;
+use Mix\Etcd\Configurator;
 use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
@@ -25,7 +25,7 @@ class StartCommand
     public $server;
 
     /**
-     * @var Config
+     * @var Configurator
      */
     public $config;
 
@@ -52,7 +52,7 @@ class StartCommand
         $this->log      = context()->get('log');
         $this->route    = context()->get('webRoute');
         $this->server   = context()->get(Server::class);
-        $this->config   = context()->get(Config::class);
+        $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
     }
 
