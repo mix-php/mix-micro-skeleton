@@ -12,6 +12,10 @@ return [
         'properties' => [
             // 地址
             'url'     => 'http://127.0.0.1:9411/api/v2/spans',
+            // 关闭
+            'disable' => false,
+            // 采样率
+            'rate'    => 1,
             // 超时
             'timeout' => 5,
         ],
