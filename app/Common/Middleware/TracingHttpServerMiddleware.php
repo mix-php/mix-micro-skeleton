@@ -4,7 +4,6 @@ namespace App\Common\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
 use Mix\Zipkin\Middleware\Http\TracingServerMiddleware;
-use Mix\Zipkin\Tracer;
 use Mix\Zipkin\Tracing;
 
 /**
@@ -16,7 +15,7 @@ class TracingHttpServerMiddleware extends TracingServerMiddleware
 
     /**
      * Get tracer
-     * @return Tracer
+     * @return \OpenTracing\Tracer
      * @throws \PhpDocReader\AnnotationException
      * @throws \ReflectionException
      */
@@ -24,7 +23,7 @@ class TracingHttpServerMiddleware extends TracingServerMiddleware
     {
         /** @var \Mix\Zipkin\Tracing $tracing */
         $tracing = context()->get(Tracing::class);
-        return $tracing->trace('Http', ServiceHelper::localIP());
+        return $tracing->startTracer('Http', ServiceHelper::localIP());
     }
 
 }
