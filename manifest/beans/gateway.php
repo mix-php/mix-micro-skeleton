@@ -23,7 +23,7 @@ return [
                 ['ref' => \Mix\Micro\Gateway\Proxy\WebProxy::class],
             ],
             // 中间件
-            'middleware' => [\App\Common\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
+            'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
             'registry'   => ['ref' => \Mix\Etcd\Registry::class],
             // 事件调度器
@@ -54,7 +54,7 @@ return [
                 ['ref' => \Mix\Micro\Gateway\Proxy\JsonRpcProxy::class],
             ],
             // 中间件
-            'middleware' => [\App\Common\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
+            'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
             'registry'   => ['ref' => \Mix\Etcd\Registry::class],
             // 事件调度器

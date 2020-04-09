@@ -18,7 +18,7 @@ return [
             'patterns'       => [
             ],
             // 全局中间件
-            'middleware'     => [\App\Common\Middleware\TracingHttpServerMiddleware::class, \App\Api\Middleware\GlobalMiddleware::class],
+            'middleware'     => [\App\Api\Middleware\TracingApiServerMiddleware::class, \App\Api\Middleware\GlobalMiddleware::class],
             // 路由规则
             'rules'          => [
                 // 普通路由
@@ -55,7 +55,7 @@ return [
                 'id' => '\d+',
             ],
             // 全局中间件
-            'middleware'     => [\App\Common\Middleware\TracingHttpServerMiddleware::class, \App\Web\Middleware\GlobalMiddleware::class],
+            'middleware'     => [\App\Web\Middleware\TracingWebServerMiddleware::class, \App\Web\Middleware\GlobalMiddleware::class],
             // 路由规则
             'rules'          => [
                 // 普通路由
