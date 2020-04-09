@@ -28,6 +28,8 @@ return [
         'properties'      => [
             // 事件调度器
             'dispatcher' => ['ref' => 'event'],
+            // 中间件
+            'middleware' => [\App\Common\Middleware\TracingJsonRpcServerMiddleware::class],
         ],
     ],
 
