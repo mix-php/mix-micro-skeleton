@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Mix\Etcd\Config;
+use Mix\Etcd\Configurator;
 
 /**
  * Class ConfigPutCommand
@@ -13,7 +13,7 @@ class ConfigPutCommand
 {
 
     /**
-     * @var Config
+     * @var Configurator
      */
     public $config;
 
@@ -22,7 +22,7 @@ class ConfigPutCommand
      */
     public function __construct()
     {
-        $this->config = context()->get(Config::class);
+        $this->config = context()->get(Configurator::class);
     }
 
     /**
