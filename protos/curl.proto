@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package php.micro.srv.curl;
+
+service Curl {
+	rpc Get(Request) returns (Response) {}
+}
+
+message Request {
+	string url = 1;
+}
+
+message Response {
+	string result = 1;
+	string error = 2;
+}

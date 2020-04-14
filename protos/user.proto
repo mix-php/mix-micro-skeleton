@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package php.micro.srv.user;
+
+service User {
+	rpc Add(Request) returns (Response) {}
+}
+
+message Request {
+	string name = 1;
+	string age = 2;
+	string email = 3;
+}
+
+message Response {
+	string status = 1;
+}
