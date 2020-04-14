@@ -17,7 +17,7 @@ class UserService implements ServiceInterface
      * Service name
      * @var string
      */
-    public const NAME = "php.micro.jsonrpc.greeter.User";
+    public const NAME = "php.micro.jsonrpc.user.User";
 
     /**
      * Add

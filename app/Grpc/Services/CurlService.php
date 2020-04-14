@@ -5,9 +5,9 @@ namespace App\Grpc\Services;
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
 use Mix\Context\Context;
 use Mix\SyncInvoke\Pool\ConnectionPool;
-use Php\Micro\Srv\Curl\CurlInterface;
-use Php\Micro\Srv\Curl\Request;
-use Php\Micro\Srv\Curl\Response;
+use Php\Micro\Grpc\Curl\CurlInterface;
+use Php\Micro\Grpc\Curl\Request;
+use Php\Micro\Grpc\Curl\Response;
 
 /**
  * Class CurlService
@@ -40,8 +40,7 @@ class CurlService implements CurlInterface
     public function Get(Context $context, Request $request): Response
     {
         // 跨进程执行同步代码
-        $response = new Response();
-        $data     = SyncInvokeHelper::invoke($this->pool, function () use ($request, $response) {
+        $response = SyncInvokeHelper::invoke($this->pool, function () use ($request) {
             /**
              * 闭包内部的同步阻塞代码会在同步服务器进程中执行
              * 代码异常会抛出 InvokeException，即便指定 throw new FooException() 也会转换为 InvokeException
@@ -64,10 +63,8 @@ class CurlService implements CurlInterface
             $result = curl_exec($curl);
             $error  = curl_error($curl);
             curl_close($curl);
-            if ($error) {
-                $response->setError($error);
-                return $response;
-            }
+            $response = new Response();
+            $response->setError($error);
             $response->setResult($result);
             return $response;
         });

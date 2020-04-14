@@ -18,7 +18,7 @@ class CurlService implements ServiceInterface
      * Service name
      * @var string
      */
-    public const NAME = "php.micro.jsonrpc.Curl";
+    public const NAME = "php.micro.jsonrpc.curl.Curl";
 
     /**
      * @var ConnectionPool
@@ -64,13 +64,13 @@ class CurlService implements ServiceInterface
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST  => "GET",
             ]);
-            $response = curl_exec($curl);
-            $err      = curl_error($curl);
+            $result = curl_exec($curl);
+            $error  = curl_error($curl);
             curl_close($curl);
-            if ($err) {
-                return "cURL Error #: " . $err;
-            }
-            return $response;
+            return [
+                'error'  => $error,
+                'result' => $result,
+            ];
         });
         return $data;
     }

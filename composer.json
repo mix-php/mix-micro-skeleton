@@ -45,7 +45,9 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "App\\": "app/",
+      "GPBMetadata\\": "protos/GPBMetadata/",
+      "Php\\": "protos/Php/"
     },
     "files": [
       "app/functions.php"

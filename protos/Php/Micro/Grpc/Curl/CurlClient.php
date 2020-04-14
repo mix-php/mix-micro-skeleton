@@ -1,7 +1,7 @@
 <?php
 // GENERATED CODE -- DO NOT EDIT!
 
-namespace Php\Micro\Srv\Curl;
+namespace Php\Micro\Grpc\Curl;
 
 /**
  */
@@ -17,15 +17,15 @@ class CurlClient extends \Grpc\BaseStub {
     }
 
     /**
-     * @param \Php\Micro\Srv\Curl\Request $argument input argument
+     * @param \Php\Micro\Grpc\Curl\Request $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
      */
-    public function Get(\Php\Micro\Srv\Curl\Request $argument,
+    public function Get(\Php\Micro\Grpc\Curl\Request $argument,
       $metadata = [], $options = []) {
-        return $this->_simpleRequest('/php.micro.srv.curl.Curl/Get',
+        return $this->_simpleRequest('/php.micro.grpc.curl.Curl/Get',
         $argument,
-        ['\Php\Micro\Srv\Curl\Response', 'decode'],
+        ['\Php\Micro\Grpc\Curl\Response', 'decode'],
         $metadata, $options);
     }
 

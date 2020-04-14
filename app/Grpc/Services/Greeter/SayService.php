@@ -3,8 +3,8 @@
 namespace App\Grpc\Services\Greeter;
 
 use Mix\Context\Context;
-use Php\Micro\Srv\Greeter\Response;
-use Php\Micro\Srv\Greeter\SayInterface;
+use Php\Micro\Grpc\Greeter\Response;
+use Php\Micro\Grpc\Greeter\SayInterface;
 
 /**
  * Class SayService
@@ -13,10 +13,16 @@ use Php\Micro\Srv\Greeter\SayInterface;
 class SayService implements SayInterface
 {
 
-    public function Hello(Context $ctx, \Php\Micro\Srv\Greeter\Request $req): Response
+    /**
+     * Hello
+     * @param Context $context
+     * @param \Php\Micro\Grpc\Greeter\Request $request
+     * @return Response
+     */
+    public function Hello(Context $context, \Php\Micro\Grpc\Greeter\Request $request): Response
     {
         $response = new Response();
-        $response->setMsg(sprintf('hello, %s', $req->getName()));
+        $response->setMsg(sprintf('hello, %s', $request->getName()));
         return $response;
     }
 

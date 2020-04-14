@@ -1,11 +1,11 @@
 <?php
 // GENERATED CODE -- DO NOT EDIT!
 
-namespace Php\Micro\Srv\User;
+namespace Php\Micro\Grpc\Greeter;
 
 /**
  */
-class UserClient extends \Grpc\BaseStub {
+class SayClient extends \Grpc\BaseStub {
 
     /**
      * @param string $hostname hostname
@@ -17,15 +17,15 @@ class UserClient extends \Grpc\BaseStub {
     }
 
     /**
-     * @param \Php\Micro\Srv\User\Request $argument input argument
+     * @param \Php\Micro\Grpc\Greeter\Request $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
      */
-    public function Add(\Php\Micro\Srv\User\Request $argument,
+    public function Hello(\Php\Micro\Grpc\Greeter\Request $argument,
       $metadata = [], $options = []) {
-        return $this->_simpleRequest('/php.micro.srv.user.User/Add',
+        return $this->_simpleRequest('/php.micro.grpc.greeter.Say/Hello',
         $argument,
-        ['\Php\Micro\Srv\User\Response', 'decode'],
+        ['\Php\Micro\Grpc\Greeter\Response', 'decode'],
         $metadata, $options);
     }
 

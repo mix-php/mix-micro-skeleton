@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package php.micro.srv.curl;
+package php.micro.grpc.curl;
 
 service Curl {
 	rpc Get(Request) returns (Response) {}

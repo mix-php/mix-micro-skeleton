@@ -3,7 +3,7 @@
 namespace App\Grpc\Models;
 
 use Mix\Database\Pool\ConnectionPool;
-use Php\Micro\Srv\User\Request;
+use Php\Micro\Grpc\User\Request;
 
 /**
  * Class UserModel

@@ -4,9 +4,9 @@ namespace App\Grpc\Services;
 
 use App\Grpc\Models\UserModel;
 use Mix\Context\Context;
-use Php\Micro\Srv\User\Request;
-use Php\Micro\Srv\User\Response;
-use Php\Micro\Srv\User\UserInterface;
+use Php\Micro\Grpc\User\Request;
+use Php\Micro\Grpc\User\Response;
+use Php\Micro\Grpc\User\UserInterface;
 
 /**
  * Class UserService

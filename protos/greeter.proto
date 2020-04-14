@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package php.micro.srv.greeter;
+package php.micro.grpc.greeter;
 
 service Say {
 	rpc Hello(Request) returns (Response) {}
