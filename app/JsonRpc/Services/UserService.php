@@ -3,14 +3,21 @@
 namespace App\JsonRpc\Services;
 
 use App\JsonRpc\Models\UserModel;
-use Mix\JsonRpc\Message\Context;
+use Mix\Context\Context;
+use Mix\JsonRpc\ServiceInterface;
 
 /**
  * Class UserService
  * @package App\JsonRpc\Services
  */
-class UserService
+class UserService implements ServiceInterface
 {
+
+    /**
+     * Service name
+     * @var string
+     */
+    public const NAME = "php.micro.jsonrpc.greeter.User";
 
     /**
      * Add

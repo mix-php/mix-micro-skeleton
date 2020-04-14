@@ -2,23 +2,21 @@
 
 namespace App\JsonRpc\Services\Greeter;
 
-use Mix\JsonRpc\Message\Context;
-use Mix\JsonRpc\Message\Request;
+use Mix\Context\Context;
+use Mix\JsonRpc\ServiceInterface;
 
 /**
  * Class SayService
  * @package App\JsonRpc\Services\Greeter
  */
-class SayService
+class SayService implements ServiceInterface
 {
 
     /**
-     * CurlService constructor.
-     * @param Request $request
+     * Service name
+     * @var string
      */
-    public function __construct(Request $request)
-    {
-    }
+    public const NAME = "php.micro.jsonrpc.greeter.Say";
 
     /**
      * Hello

@@ -3,16 +3,22 @@
 namespace App\JsonRpc\Services;
 
 use App\SyncInvoke\Helpers\SyncInvokeHelper;
-use Mix\JsonRpc\Message\Context;
-use Mix\JsonRpc\Message\Request;
+use Mix\Context\Context;
+use Mix\JsonRpc\ServiceInterface;
 use Mix\SyncInvoke\Pool\ConnectionPool;
 
 /**
  * Class CurlService
  * @package App\JsonRpc\Services
  */
-class CurlService
+class CurlService implements ServiceInterface
 {
+
+    /**
+     * Service name
+     * @var string
+     */
+    public const NAME = "php.micro.jsonrpc.Curl";
 
     /**
      * @var ConnectionPool

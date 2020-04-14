@@ -12,8 +12,7 @@ use Mix\JsonRpc\Server;
 
 /**
  * Class StartCommand
- * @package App\Sync\Commands
- * @author liu,jian <coder.keda@gmail.com>
+ * @package App\JsonRpc\Commands
  */
 class StartCommand
 {
