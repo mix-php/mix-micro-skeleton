@@ -61,8 +61,8 @@ class StartCommand
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('server shutdown');
+            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->log->info('Server shutdown');
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
@@ -77,7 +77,7 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        $this->log->info('server start');
+        $this->log->info('Server start');
         $this->server->start();
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Grpc\Commands;
 
+use Mix\Concurrent\Timer;
 use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Configurator;
 use Mix\Etcd\Factory\ServiceBundleFactory;
@@ -78,8 +79,8 @@ class StartCommand
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('server shutdown');
+            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->log->info('Server shutdown');
             $this->registry->close();
             $this->config->close();
             $this->server->shutdown();
@@ -99,15 +100,22 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        $this->log->info('server start');
-        // 注册服务
+        // 注册
         foreach ($this->classes as $class) {
             $this->server->register($class);
         }
-        // 注册服务
-        $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromGrpc($this->server);
-        $this->registry->register($serviceBundle);
+        // 服务注册
+        $timer = Timer::new();
+        $timer->tick(100, function () use ($timer) {
+            if (!$this->server->port) {
+                return;
+            }
+            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
+            $serviceBundleFactory = new ServiceBundleFactory();
+            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromGrpc($this->server);
+            $this->registry->register($serviceBundle);
+            $timer->clear();
+        });
         // 启动
         $this->server->start();
     }
@@ -119,8 +127,6 @@ class StartCommand
     {
         $phpVersion    = PHP_VERSION;
         $swooleVersion = swoole_version();
-        $host          = $this->server->host;
-        $port          = $this->server->port;
         echo <<<EOL
                               ____
  ______ ___ _____ ___   _____  / /_ _____
@@ -136,8 +142,6 @@ EOL;
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
         println('Framework      Version:   ' . \Mix::$version);
-        println("Listen         Addr:      {$host}");
-        println("Listen         Port:      {$port}");
     }
 
 }
