@@ -20,6 +20,7 @@ class UserClient extends \Grpc\BaseStub {
      * @param \Php\Micro\Grpc\User\Request $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
+     * @return \Php\Micro\Grpc\User\Response
      */
     public function Add(\Php\Micro\Grpc\User\Request $argument,
       $metadata = [], $options = []) {

@@ -102,14 +102,11 @@ class StartCommand
         $this->log->info('server start');
         // 注册服务
         foreach ($this->classes as $class) {
-            $this->server->register($class, 'App\JsonRpc\Services', 'Service');
+            $this->server->register($class);
         }
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc(
-            $this->server,
-            'php.micro.jsonrpc'
-        );
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc($this->server);
         $this->registry->register($serviceBundle);
         // 启动
         $this->server->start();

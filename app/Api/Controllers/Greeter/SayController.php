@@ -5,11 +5,12 @@ namespace App\Api\Controllers\Greeter;
 use App\Common\Helpers\ResponseHelper;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
-use Mix\JsonRpc\Client\Dialer;
-use Mix\JsonRpc\Factory\RequestFactory;
+use Mix\Grpc\Client\Dialer;
 use Mix\Micro\Hystrix\CircuitBreaker;
-use Mix\Zipkin\Middleware\JsonRpc\TracingClientMiddleware;
+use Mix\Zipkin\Middleware\Grpc\TracingClientMiddleware;
 use Mix\Zipkin\Tracing;
+use Php\Micro\Grpc\Greeter\Request;
+use Php\Micro\Grpc\Greeter\SayClient;
 
 /**
  * Class SayController
@@ -49,7 +50,24 @@ class SayController
     {
         $name = $request->getAttribute('name', '?');
 
-        // 使用熔断器调用
+        // 使用熔断器调用 (gRPC)
+        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
+            // 调用rpc
+            $tracer     = Tracing::extract($request->getContext());
+            $middleware = new TracingClientMiddleware($tracer);
+            /** @var SayClient $client */
+            $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', SayClient::class, $middleware);
+            $rpcRequest = new Request();
+            $rpcRequest->setName($name);
+            $rpcResponse = $client->Hello($rpcRequest);
+            return $rpcResponse->getMsg();
+        }, function () use ($name) {
+            // 返回本地数据或抛出异常
+            return sprintf('hello, %s', $name);
+        });
+
+        /*
+        // 使用熔断器调用 (jsonrpc)
         $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
             // 调用rpc
             $tracer      = Tracing::extract($request->getContext());
@@ -64,12 +82,13 @@ class SayController
             return $rpcResponse->result;
         }, function () use ($name) {
             // 返回本地数据或抛出异常
-            return [sprintf('hello, %s', $name)];
+            return sprintf('hello, %s', $name);
         });
+        */
 
         $data = [
             'code'    => 0,
-            'message' => array_pop($result),
+            'message' => $result,
         ];
         return ResponseHelper::json($response, $data);
     }

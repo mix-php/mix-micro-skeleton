@@ -20,6 +20,7 @@ class CurlClient extends \Grpc\BaseStub {
      * @param \Php\Micro\Grpc\Curl\Request $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
+     * @return \Php\Micro\Grpc\Curl\Response
      */
     public function Get(\Php\Micro\Grpc\Curl\Request $argument,
       $metadata = [], $options = []) {

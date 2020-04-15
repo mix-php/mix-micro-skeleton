@@ -17,6 +17,7 @@ return [
             \App\Common\Listeners\DatabaseListener::class,
             \App\Common\Listeners\RedisListener::class,
             \App\JsonRpc\Listeners\JsonRpcListener::class,
+            \App\Grpc\Listeners\GrpcListener::class,
             \App\SyncInvoke\Listeners\SyncInvokeListener::class,
             \App\Gateway\Listeners\GatewayListener::class,
         ],

@@ -49,11 +49,12 @@ class GrpcListener implements ListenerInterface
             return;
         }
         $level   = $event->error ? 'warning' : 'info';
-        $message = '{time}|{method}|{error}';
+        $message = '{time}|{service}|{method}|{error}';
         $context = [
-            'time'   => $event->time,
-            'method' => $event->request,
-            'error'  => $event->error,
+            'time'    => $event->time,
+            'service' => $event->service,
+            'method'  => $event->method,
+            'error'   => $event->error,
         ];
         $this->log->log($level, $message, $context);
     }

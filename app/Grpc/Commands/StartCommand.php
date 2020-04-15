@@ -102,14 +102,11 @@ class StartCommand
         $this->log->info('server start');
         // 注册服务
         foreach ($this->classes as $class) {
-            $this->server->register($class, 'App\Grpc\Services', 'Service');
+            $this->server->register($class);
         }
         // 注册服务
         $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc(
-            $this->server,
-            'php.micro.jsonrpc'
-        );
+        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromGrpc($this->server);
         $this->registry->register($serviceBundle);
         // 启动
         $this->server->start();
@@ -134,7 +131,7 @@ class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-jsonrpc');
+        println('Server         Name:      mix-grpc');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

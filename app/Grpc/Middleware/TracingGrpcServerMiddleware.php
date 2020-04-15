@@ -2,7 +2,9 @@
 
 namespace App\Grpc\Middleware;
 
+use Mix\Micro\Register\Helper\ServiceHelper;
 use Mix\Zipkin\Middleware\Grpc\TracingServerMiddleware;
+use Mix\Zipkin\Tracing;
 
 /**
  * Class TracingGrpcServerMiddleware

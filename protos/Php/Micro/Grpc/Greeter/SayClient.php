@@ -20,6 +20,7 @@ class SayClient extends \Grpc\BaseStub {
      * @param \Php\Micro\Grpc\Greeter\Request $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
+     * @return \Php\Micro\Grpc\Greeter\Response
      */
     public function Hello(\Php\Micro\Grpc\Greeter\Request $argument,
       $metadata = [], $options = []) {
