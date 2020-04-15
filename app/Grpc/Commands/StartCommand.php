@@ -64,19 +64,6 @@ class StartCommand
      */
     public function main()
     {
-        // 参数重写
-        $host = Flag::string(['h', 'host'], '');
-        if ($host) {
-            $this->server->host = $host;
-        }
-        $port = Flag::int(['p', 'port'], 0);
-        if ($port) {
-            $this->server->port = $port;
-        }
-        $reusePort = Flag::bool(['r', 'reuse-port'], false);
-        if ($reusePort) {
-            $this->server->reusePort = $reusePort;
-        }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('Received signal [{signal}]', ['signal' => $signal]);

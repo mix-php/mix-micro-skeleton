@@ -3,6 +3,7 @@
 namespace App\Api\Commands;
 
 use App\Api\Route\Router;
+use Mix\Concurrent\Timer;
 use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Configurator;
 use Mix\Etcd\Factory\ServiceBundleFactory;
@@ -62,19 +63,6 @@ class StartCommand
      */
     public function main()
     {
-        // 参数重写
-        $host = Flag::string(['h', 'host'], '');
-        if ($host) {
-            $this->server->host = $host;
-        }
-        $port = Flag::int(['p', 'port'], 9502);
-        if ($port) {
-            $this->server->port = $port;
-        }
-        $reusePort = Flag::bool(['r', 'reuse-port'], false);
-        if ($reusePort) {
-            $this->server->reusePort = $reusePort;
-        }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
@@ -98,15 +86,21 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        $this->log->info('Server start');
-        // 注册服务
-        $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
-            $this->server,
-            $this->route,
-            'php.micro.api'
-        );
-        $this->registry->register($serviceBundle);
+        // 服务注册
+        $timer = Timer::new();
+        $timer->tick(100, function () use ($timer) {
+            if (!$this->server->port) {
+                return;
+            }
+            $serviceBundleFactory = new ServiceBundleFactory();
+            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
+                $this->server,
+                $this->route,
+                'php.micro.api'
+            );
+            $this->registry->register($serviceBundle);
+            $timer->clear();
+        });
         // 启动
         $this->server->start($this->route);
     }
@@ -135,8 +129,6 @@ EOL;
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
         println('Framework      Version:   ' . \Mix::$version);
-        println("Listen         Addr:      {$host}");
-        println("Listen         Port:      {$port}");
     }
 
 }

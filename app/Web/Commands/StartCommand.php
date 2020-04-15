@@ -2,6 +2,7 @@
 
 namespace App\Web\Commands;
 
+use Mix\Concurrent\Timer;
 use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Configurator;
 use Mix\Etcd\Factory\ServiceBundleFactory;
@@ -62,15 +63,6 @@ class StartCommand
      */
     public function main()
     {
-        // 参数重写
-        $host = Flag::string(['h', 'host'], '');
-        if ($host) {
-            $this->server->host = $host;
-        }
-        $port = Flag::int(['p', 'port'], 0);
-        if ($port) {
-            $this->server->port = $port;
-        }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
@@ -94,15 +86,21 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        $this->log->info('Server start');
         // 注册服务
-        $serviceBundleFactory = new ServiceBundleFactory();
-        $serviceBundle        = $serviceBundleFactory->createServiceBundleFromWeb(
-            $this->server,
-            $this->route,
-            'php.micro.web'
-        );
-        $this->registry->register($serviceBundle);
+        $timer = Timer::new();
+        $timer->tick(100, function () use ($timer) {
+            if (!$this->server->port) {
+                return;
+            }
+            $serviceBundleFactory = new ServiceBundleFactory();
+            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromWeb(
+                $this->server,
+                $this->route,
+                'php.micro.web'
+            );
+            $this->registry->register($serviceBundle);
+            $timer->clear();
+        });
         // 启动
         $this->server->start($this->route);
     }
@@ -114,8 +112,6 @@ class StartCommand
     {
         $phpVersion    = PHP_VERSION;
         $swooleVersion = swoole_version();
-        $host          = $this->server->host;
-        $port          = $this->server->port;
         echo <<<EOL
                               ____
  ______ ___ _____ ___   _____  / /_ _____
@@ -131,8 +127,6 @@ EOL;
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
         println('Framework      Version:   ' . \Mix::$version);
-        println("Listen         Addr:      {$host}");
-        println("Listen         Port:      {$port}");
     }
 
 }
