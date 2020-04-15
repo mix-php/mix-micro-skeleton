@@ -3,7 +3,6 @@
 namespace App\WebSocket\Commands;
 
 use Mix\Concurrent\Timer;
-use Mix\Console\CommandLine\Flag;
 use Mix\Etcd\Configurator;
 use Mix\Etcd\Factory\ServiceBundleFactory;
 use Mix\Etcd\Registry;
