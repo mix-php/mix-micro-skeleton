@@ -92,6 +92,7 @@ class StartCommand
             if (!$this->server->port) {
                 return;
             }
+            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             $serviceBundleFactory = new ServiceBundleFactory();
             $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
                 $this->server,
