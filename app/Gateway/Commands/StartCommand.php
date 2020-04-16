@@ -44,23 +44,22 @@ class StartCommand
     public function main()
     {
         // 参数重写
-        $serverName = Flag::string(['n', 'server-name'], 'web');
-        switch ($serverName) {
+        $proxy = Flag::string(['p', 'proxy'], 'web');
+        switch ($proxy) {
             case 'web':
                 $serverName = 'webGatewayServer';
                 break;
             case 'api':
                 $serverName = 'apiGatewayServer';
                 break;
+            case 'rpc':
+                $serverName = 'rpcGatewayServer';
+                break;
             default:
                 $serverName = 'webGatewayServer';
         }
         $this->server = context()->get($serverName);
-        $port         = Flag::int(['p', 'port'], 0);
-        if ($port) {
-            $this->server->port = $port;
-        }
-        $reusePort = Flag::bool(['r', 'reuse-port'], false);
+        $reusePort    = Flag::bool(['r', 'reuse-port'], false);
         if ($reusePort) {
             $this->server->reusePort = $reusePort;
         }

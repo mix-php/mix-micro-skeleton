@@ -50,11 +50,38 @@ return [
             'proxies'    => [
                 // Api代理
                 ['ref' => \Mix\Micro\Gateway\Proxy\ApiProxy::class],
+            ],
+            // 中间件
+            'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
+            // 注册中心
+            'registry'   => ['ref' => \Mix\Etcd\Registry::class],
+            // 事件调度器
+            'dispatcher' => ['ref' => 'event'],
+        ],
+    ],
+
+    // Gateway服务器
+    [
+        // 名称
+        'name'            => 'rpcGatewayServer',
+        // 类路径
+        'class'           => \Mix\Micro\Gateway\Server::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // port
+            9597,
+            // reusePort
+            false,
+        ],
+        // 属性注入
+        'properties'      => [
+            // 代理器集合
+            'proxies'    => [
                 // Json-rpc代理
                 ['ref' => \Mix\Micro\Gateway\Proxy\JsonRpcProxy::class],
             ],
             // 中间件
-            'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
+            'middleware' => [\App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
             'registry'   => ['ref' => \Mix\Etcd\Registry::class],
             // 事件调度器
