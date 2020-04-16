@@ -4,7 +4,7 @@ namespace App\JsonRpc\Commands;
 
 use Mix\Concurrent\Timer;
 use Mix\Etcd\Configurator;
-use Mix\Etcd\Factory\ServiceBundleFactory;
+use Mix\Etcd\Factory\ServiceFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Log\Logger;
@@ -57,7 +57,9 @@ class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('JSONRPC');
-        $this->log->pushHandler(context()->get('jsonRpcRotatingFileHandler'));
+        /** @var \Monolog\Handler\HandlerInterface $handler */
+        $handler = context()->get('jsonRpcRotatingFileHandler');
+        $this->log->pushHandler($handler);
     }
 
     /**
@@ -99,10 +101,13 @@ class StartCommand
             if (!$this->server->port) {
                 return;
             }
+            xdefer(function () use ($timer) {
+                $timer->clear();
+            });
             $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
-            $serviceBundleFactory = new ServiceBundleFactory();
-            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromJsonRpc($this->server);
-            $this->registry->register($serviceBundle);
+            $serviceFactory = new ServiceFactory();
+            $services       = $serviceFactory->createServicesFromJsonRpc($this->server);
+            $this->registry->register(...$services);
             $timer->clear();
         });
         // 启动

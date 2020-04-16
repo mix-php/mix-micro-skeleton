@@ -4,7 +4,7 @@ namespace App\WebSocket\Commands;
 
 use Mix\Concurrent\Timer;
 use Mix\Etcd\Configurator;
-use Mix\Etcd\Factory\ServiceBundleFactory;
+use Mix\Etcd\Factory\ServiceFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Message\Factory\StreamFactory;
@@ -66,7 +66,9 @@ class StartCommand
         $this->upgrader = new Upgrader();
 
         $this->log->withName('WEBSOCKET');
-        $this->log->pushHandler(context()->get('webSocketRotatingFileHandler'));
+        /** @var \Monolog\Handler\HandlerInterface $handler */
+        $handler = context()->get('webSocketRotatingFileHandler');
+        $this->log->pushHandler($handler);
     }
 
     /**
@@ -109,14 +111,17 @@ class StartCommand
             if (!$this->server->port) {
                 return;
             }
+            xdefer(function () use ($timer) {
+                $timer->clear();
+            });
             $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
-            $serviceBundleFactory = new ServiceBundleFactory();
-            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromWeb(
+            $serviceFactory = new ServiceFactory();
+            $services       = $serviceFactory->createServicesFromWeb(
                 $this->server,
                 null,
                 'php.micro.web'
             );
-            $this->registry->register($serviceBundle);
+            $this->registry->registerBundle(...$services);
             $timer->clear();
         });
         // 启动

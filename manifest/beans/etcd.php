@@ -17,7 +17,7 @@ return [
             // 超时
             'timeout'        => 5,
             // 用户
-            'user'           => 'test',
+            'user'           => 'root',
             // 密码
             'password'       => '123456',
             // 服务注册生存时间
@@ -49,7 +49,7 @@ return [
             // 超时
             'timeout'    => 5,
             // 用户
-            'user'       => 'test',
+            'user'       => 'root',
             // 密码
             'password'   => '123456',
             // 刷新间隔

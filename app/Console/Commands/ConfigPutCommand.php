@@ -28,6 +28,7 @@ class ConfigPutCommand
      */
     public function __construct()
     {
+        $this->log    = context()->get('log');
         $this->config = context()->get(Configurator::class);
 
         $this->log->withName('CONSOLE');

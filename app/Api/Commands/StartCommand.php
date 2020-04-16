@@ -5,7 +5,7 @@ namespace App\Api\Commands;
 use App\Api\Route\Router;
 use Mix\Concurrent\Timer;
 use Mix\Etcd\Configurator;
-use Mix\Etcd\Factory\ServiceBundleFactory;
+use Mix\Etcd\Factory\ServiceFactory;
 use Mix\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
@@ -56,7 +56,9 @@ class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('API');
-        $this->log->pushHandler(context()->get('apiRotatingFileHandler'));
+        /** @var \Monolog\Handler\HandlerInterface $handler */
+        $handler = context()->get('apiRotatingFileHandler');
+        $this->log->pushHandler($handler);
     }
 
     /**
@@ -94,14 +96,17 @@ class StartCommand
             if (!$this->server->port) {
                 return;
             }
+            xdefer(function () use ($timer) {
+                $timer->clear();
+            });
             $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
-            $serviceBundleFactory = new ServiceBundleFactory();
-            $serviceBundle        = $serviceBundleFactory->createServiceBundleFromAPI(
+            $serviceFactory = new ServiceFactory();
+            $services       = $serviceFactory->createServicesFromAPI(
                 $this->server,
                 $this->route,
                 'php.micro.api'
             );
-            $this->registry->register($serviceBundle);
+            $this->registry->register(...$services);
             $timer->clear();
         });
         // 启动
