@@ -32,6 +32,9 @@ class StartCommand
     {
         $this->log    = context()->get('log');
         $this->server = context()->get(Server::class);
+
+        $this->log->withName('SYNCINVOKE');
+        $this->log->pushHandler(context()->get('syncInvokeRotatingFileHandler'));
     }
 
     /**

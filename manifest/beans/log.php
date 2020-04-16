@@ -5,53 +5,155 @@ return [
     // 日志
     [
         // 名称
-        'name'       => 'log',
+        'name'            => 'log',
         // 作用域
-        'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
+        'scope'           => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Log\Logger::class,
-        // 属性注入
-        'properties' => [
-            // 日志记录级别
-            'levels'  => ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'],
-            // 处理器
-            'handler' => ['ref' => \Mix\Log\MultiHandler::class],
-        ],
-    ],
-
-    // 日志处理器
-    [
-        // 类路径
-        'class'           => \Mix\Log\MultiHandler::class,
+        'class'           => \Mix\Log\Logger::class,
         // 构造函数注入
         'constructorArgs' => [
-            // 标准输出处理器
-            ['ref' => \Mix\Log\StdoutHandler::class],
-            // 文件处理器
-            ['ref' => \Mix\Log\FileHandler::class],
+            // name
+            'MIX',
+            // handlers
+            [new \Mix\Log\Handler\ConsoleHandler],
+            // processors
+            [new \Monolog\Processor\PsrLogMessageProcessor],
         ],
     ],
 
-    // 日志标准输出处理器
+    // 轮转文件处理器
     [
+        // 名称
+        'name'            => 'apiRotatingFileHandler',
         // 类路径
-        'class' => \Mix\Log\StdoutHandler::class,
+        'class'           => \Mix\Log\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/api.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
     ],
 
-    // 日志文件处理器
+    // 轮转文件处理器
     [
+        // 名称
+        'name'            => 'consoleRotatingFileHandler',
         // 类路径
-        'class'      => \Mix\Log\FileHandler::class,
-        // 属性注入
-        'properties' => [
-            // 日志名称
-            'filename'    => realpath(__DIR__ . '/../../runtime') . '/logs/mix.log',
-            // 开启轮转
-            'rotate'      => true,
-            // 最大文件尺寸
-            'maxFileSize' => 0,
-            // 最大保留天数
-            'maxDays'     => 7,
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/console.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'gatewayRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/gateway.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'grpcRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/grpc.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'jsonRpcRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/jsonrpc.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'syncInvokeRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/syncinvoke.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'webRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/web.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
+        ],
+    ],
+
+    // 轮转文件处理器
+    [
+        // 名称
+        'name'            => 'webSocketRotatingFileHandler',
+        // 类路径
+        'class'           => \Monolog\Handler\RotatingFileHandler::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // filename
+            realpath(__DIR__ . '/../../runtime') . '/logs/websocket.log',
+            // maxFiles
+            7,
+            // minimum level
+            \Monolog\Logger::DEBUG,
         ],
     ],
 

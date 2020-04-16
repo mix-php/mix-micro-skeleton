@@ -55,6 +55,9 @@ class StartCommand
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
+
+        $this->log->withName('JSONRPC');
+        $this->log->pushHandler(context()->get('jsonRpcRotatingFileHandler'));
     }
 
     /**
@@ -113,8 +116,6 @@ class StartCommand
     {
         $phpVersion    = PHP_VERSION;
         $swooleVersion = swoole_version();
-        $host          = $this->server->host;
-        $port          = $this->server->port;
         echo <<<EOL
                               ____
  ______ ___ _____ ___   _____  / /_ _____

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Mix\Etcd\Configurator;
+use Mix\Log\Logger;
 
 /**
  * Class ConfigPutCommand
@@ -18,11 +19,19 @@ class ConfigPutCommand
     public $config;
 
     /**
+     * @var Logger
+     */
+    public $log;
+
+    /**
      * ConfigPutCommand constructor.
      */
     public function __construct()
     {
         $this->config = context()->get(Configurator::class);
+
+        $this->log->withName('CONSOLE');
+        $this->log->pushHandler(context()->get('consoleRotatingFileHandler'));
     }
 
     /**

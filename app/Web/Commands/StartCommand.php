@@ -54,6 +54,9 @@ class StartCommand
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
+
+        $this->log->withName('WEB');
+        $this->log->pushHandler(context()->get('webRotatingFileHandler'));
     }
 
     /**

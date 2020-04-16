@@ -64,6 +64,9 @@ class StartCommand
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
         $this->upgrader = new Upgrader();
+
+        $this->log->withName('WEBSOCKET');
+        $this->log->pushHandler(context()->get('webSocketRotatingFileHandler'));
     }
 
     /**

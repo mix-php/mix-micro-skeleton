@@ -30,6 +30,9 @@ class StartCommand
     public function __construct()
     {
         $this->log = context()->get('log');
+
+        $this->log->withName('GATEWAY');
+        $this->log->pushHandler(context()->get('gatewayRotatingFileHandler'));
     }
 
     /**
