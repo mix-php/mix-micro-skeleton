@@ -3,7 +3,7 @@
 namespace App\JsonRpc\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
-use Mix\Zipkin\Middleware\JsonRpc\TracingServerMiddleware;
+use Mix\Tracing\Middleware\JsonRpc\TracingServerMiddleware;
 use Mix\Zipkin\Tracing;
 
 /**

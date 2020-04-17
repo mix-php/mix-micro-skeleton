@@ -3,7 +3,7 @@
 namespace App\Web\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
-use Mix\Zipkin\Middleware\Http\TracingServerMiddleware;
+use Mix\Tracing\Middleware\Http\TracingServerMiddleware;
 use Mix\Zipkin\Tracing;
 
 /**
