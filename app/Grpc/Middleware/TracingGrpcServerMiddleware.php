@@ -3,7 +3,7 @@
 namespace App\Grpc\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
-use Mix\Tracing\Middleware\Grpc\TracingServerMiddleware;
+use Mix\Tracing\\Grpc\TracingServerMiddleware;
 use Mix\Zipkin\Tracing;
 
 /**

@@ -17,9 +17,9 @@ return [
             // 超时
             'timeout'        => 5,
             // 用户
-            'user'           => 'root',
+            'user'           => '',
             // 密码
-            'password'       => '123456',
+            'password'       => '',
             // 服务注册生存时间
             'registerTTL'    => 5,
             // 服务监控最大空闲时间
@@ -49,9 +49,9 @@ return [
             // 超时
             'timeout'    => 5,
             // 用户
-            'user'       => 'root',
+            'user'       => '',
             // 密码
-            'password'   => '123456',
+            'password'   => '',
             // 刷新间隔
             'interval'   => 5,
             // 名称空间
