@@ -16,7 +16,7 @@ use Mix\Log\Logger;
  * @package App\Api\Commands
  * @author liu,jian <coder.keda@gmail.com>
  */
-class StartCommand
+abstract class StartCommand
 {
 
     /**
@@ -50,7 +50,7 @@ class StartCommand
     public function __construct()
     {
         $this->log      = context()->get('log');
-        $this->route    = context()->get('apiRoute');
+        $this->route    = context()->get('route');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
@@ -77,9 +77,16 @@ class StartCommand
         });
         // 监听配置
         $this->config->listen();
+        // 初始化
+        $this->init();
         // 启动服务器
         $this->start();
     }
+
+    /**
+     * Init
+     */
+    abstract public function init();
 
     /**
      * 启动服务器
@@ -98,15 +105,17 @@ class StartCommand
             xdefer(function () use ($timer) {
                 $timer->clear();
             });
-            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             $serviceFactory = new ServiceFactory();
             $services       = $serviceFactory->createServicesFromAPI(
                 $this->server,
                 $this->route,
                 'php.micro.api'
             );
+            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
+            foreach ($services as $service) {
+                $this->log->info(sprintf('Register service [%s]', $service->getFirstNode()->getID()));
+            }
             $this->registry->register(...$services);
-            $timer->clear();
         });
         // 启动
         $this->server->start($this->route);

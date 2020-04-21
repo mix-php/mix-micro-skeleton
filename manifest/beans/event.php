@@ -19,7 +19,6 @@ return [
             \App\JsonRpc\Listeners\JsonRpcListener::class,
             \App\Grpc\Listeners\GrpcListener::class,
             \App\SyncInvoke\Listeners\SyncInvokeListener::class,
-            \App\Gateway\Listeners\GatewayListener::class,
         ],
     ],
 

@@ -13,10 +13,10 @@ use Php\Micro\Grpc\Greeter\Request;
 use Php\Micro\Grpc\Greeter\SayClient;
 
 /**
- * Class SayController
+ * Class CarryController
  * @package App\Api\Controllers\Greeter
  */
-class SayController
+class CarryController
 {
 
     /**
@@ -41,17 +41,17 @@ class SayController
     }
 
     /**
-     * Hello
+     * Luggage
      * @param ServerRequest $request
      * @param Response $response
      * @return Response
      */
-    public function hello(ServerRequest $request, Response $response)
+    public function luggage(ServerRequest $request, Response $response)
     {
         $name = $request->getAttribute('name', '?');
 
         // 使用熔断器调用 (gRPC)
-        $result = $this->breaker->do('php.micro.grpc.greeter', function () use ($request, $name) {
+        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
             // 调用rpc
             $tracer     = Tracing::extract($request->getContext());
             $middleware = new TracingClientMiddleware($tracer);
