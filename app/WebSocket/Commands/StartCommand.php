@@ -3,9 +3,9 @@
 namespace App\WebSocket\Commands;
 
 use Mix\Concurrent\Timer;
-use Mix\Etcd\Configurator;
-use Mix\Etcd\Factory\ServiceFactory;
-use Mix\Etcd\Registry;
+use Mix\Micro\Etcd\Configurator;
+use Mix\Micro\Etcd\Factory\ServiceFactory;
+use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Message\Factory\StreamFactory;
 use Mix\Http\Message\Response;

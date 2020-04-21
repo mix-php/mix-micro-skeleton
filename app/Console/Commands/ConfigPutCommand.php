@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Mix\Etcd\Configurator;
+use Mix\Micro\Etcd\Configurator;
 use Mix\Log\Logger;
 
 /**

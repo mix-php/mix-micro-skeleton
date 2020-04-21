@@ -4,9 +4,9 @@ namespace App\Api\Commands;
 
 use App\Api\Route\Router;
 use Mix\Concurrent\Timer;
-use Mix\Etcd\Configurator;
-use Mix\Etcd\Factory\ServiceFactory;
-use Mix\Etcd\Registry;
+use Mix\Micro\Etcd\Configurator;
+use Mix\Micro\Etcd\Factory\ServiceFactory;
+use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Log\Logger;

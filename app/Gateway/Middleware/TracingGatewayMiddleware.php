@@ -3,8 +3,8 @@
 namespace App\Gateway\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
-use Mix\Tracing\\Http\TracingServerMiddleware;
-use Mix\Zipkin\Tracing;
+use Mix\Tracing\Http\TracingServerMiddleware;
+use Mix\Tracing\Zipkin\Tracing;
 
 /**
  * Class TracingGatewayMiddleware
@@ -21,7 +21,7 @@ class TracingGatewayMiddleware extends TracingServerMiddleware
      */
     public function tracer()
     {
-        /** @var \Mix\Zipkin\Tracing $tracing */
+        /** @var \Mix\Tracing\Zipkin\Tracing $tracing */
         $tracing = context()->get(Tracing::class);
         return $tracing->startTracer('Gateway', ServiceHelper::localIP());
     }

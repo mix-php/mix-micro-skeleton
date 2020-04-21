@@ -39,9 +39,10 @@
     "mix/micro-gateway": "~2.1.0",
     "mix/micro-hystrix": "~2.1.0",
     "mix/micro-register": "~2.1.0",
-    "mix/etcd": "~2.1.0",
-    "mix/zipkin": "~2.1.0",
-    "mix/tracing": "~2.1.0"
+    "mix/micro-etcd": "~2.1.0",
+    "mix/micro-route": "~2.1.0",
+    "mix/tracing": "~2.1.0",
+    "mix/tracing-zipkin": "~2.1.0"
   },
   "require-dev": {
     "swoole/ide-helper": "dev-master"

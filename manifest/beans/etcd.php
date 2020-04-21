@@ -7,7 +7,7 @@ return [
         // 作用域
         'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Etcd\Registry::class,
+        'class'      => \Mix\Micro\Etcd\Registry::class,
         // 初始方法
         'initMethod' => 'init',
         // 属性注入
@@ -25,13 +25,13 @@ return [
             // 服务监控最大空闲时间
             'monitorMaxIdle' => 30,
             // 负载均衡器
-            'loadBalancer'   => ['ref' => \Mix\Etcd\LoadBalancer\RoundRobinBalancer::class],
+            'loadBalancer'   => ['ref' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class],
         ],
     ],
 
     // 负载均衡器
     [
-        'class' => \Mix\Etcd\LoadBalancer\RoundRobinBalancer::class,
+        'class' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class,
     ],
 
     // 配置中心
@@ -39,7 +39,7 @@ return [
         // 作用域
         'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Etcd\Configurator::class,
+        'class'      => \Mix\Micro\Etcd\Configurator::class,
         // 初始方法
         'initMethod' => 'init',
         // 属性注入

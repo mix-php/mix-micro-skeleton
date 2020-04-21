@@ -9,7 +9,7 @@ return [
         // 属性注入
         'properties' => [
             // 注册中心
-            'registry' => ['ref' => \Mix\Etcd\Registry::class],
+            'registry' => ['ref' => \Mix\Micro\Etcd\Registry::class],
         ],
     ],
 

@@ -3,8 +3,8 @@
 namespace App\JsonRpc\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
-use Mix\Tracing\\JsonRpc\TracingServerMiddleware;
-use Mix\Zipkin\Tracing;
+use Mix\Tracing\JsonRpc\TracingServerMiddleware;
+use Mix\Tracing\Zipkin\Tracing;
 
 /**
  * Class TracingJsonRpcServerMiddleware
@@ -21,7 +21,7 @@ class TracingJsonRpcServerMiddleware extends TracingServerMiddleware
      */
     public function tracer()
     {
-        /** @var \Mix\Zipkin\Tracing $tracing */
+        /** @var \Mix\Tracing\Zipkin\Tracing $tracing */
         $tracing = context()->get(Tracing::class);
         return $tracing->startTracer('JsonRpc', ServiceHelper::localIP());
     }

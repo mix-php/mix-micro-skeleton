@@ -25,7 +25,7 @@ return [
             // 中间件
             'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
-            'registry'   => ['ref' => \Mix\Etcd\Registry::class],
+            'registry'   => ['ref' => \Mix\Micro\Etcd\Registry::class],
             // 事件调度器
             'dispatcher' => ['ref' => 'event'],
         ],
@@ -54,7 +54,7 @@ return [
             // 中间件
             'middleware' => [\App\Gateway\Middleware\TracingGatewayMiddleware::class, \App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
-            'registry'   => ['ref' => \Mix\Etcd\Registry::class],
+            'registry'   => ['ref' => \Mix\Micro\Etcd\Registry::class],
             // 事件调度器
             'dispatcher' => ['ref' => 'event'],
         ],
@@ -83,7 +83,7 @@ return [
             // 中间件
             'middleware' => [\App\Gateway\Middleware\RateLimitMiddleware::class],
             // 注册中心
-            'registry'   => ['ref' => \Mix\Etcd\Registry::class],
+            'registry'   => ['ref' => \Mix\Micro\Etcd\Registry::class],
             // 事件调度器
             'dispatcher' => ['ref' => 'event'],
         ],
