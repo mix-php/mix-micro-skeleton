@@ -57,8 +57,7 @@ class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('GRPC');
-        /** @var \Monolog\Handler\HandlerInterface $handler */
-        $handler = context()->get('grpcRotatingFileHandler');
+        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/grpc.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

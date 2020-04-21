@@ -66,8 +66,7 @@ class StartCommand
         $this->upgrader = new Upgrader();
 
         $this->log->withName('WEBSOCKET');
-        /** @var \Monolog\Handler\HandlerInterface $handler */
-        $handler = context()->get('webSocketRotatingFileHandler');
+        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

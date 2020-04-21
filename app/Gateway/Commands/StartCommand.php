@@ -32,8 +32,7 @@ class StartCommand
         $this->log = context()->get('log');
 
         $this->log->withName('GATEWAY');
-        /** @var \Monolog\Handler\HandlerInterface $handler */
-        $handler = context()->get('gatewayRotatingFileHandler');
+        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/gateway.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

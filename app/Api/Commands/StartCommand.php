@@ -56,8 +56,7 @@ class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('API');
-        /** @var \Monolog\Handler\HandlerInterface $handler */
-        $handler = context()->get('apiRotatingFileHandler');
+        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/api.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 
