@@ -121,7 +121,7 @@ class StartCommand
                 null,
                 'php.micro.web'
             );
-            $this->registry->registerBundle(...$services);
+            $this->registry->register(...$services);
             $timer->clear();
         });
         // 启动
