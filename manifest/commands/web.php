@@ -2,8 +2,16 @@
 
 return [
 
-    'web:start' => [
-        \App\Web\Commands\StartCommand::class,
+    'web:index:start' => [
+        \App\Web\Commands\IndexCommand::class,
+        'description' => "Start service",
+        'options'     => [
+            [['d', 'daemon'], 'description' => "\tRun in the background"],
+        ],
+    ],
+
+    'web:profile:start' => [
+        \App\Web\Commands\ProfileCommand::class,
         'description' => "Start service",
         'options'     => [
             [['d', 'daemon'], 'description' => "\tRun in the background"],

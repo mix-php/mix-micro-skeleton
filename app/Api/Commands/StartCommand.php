@@ -50,7 +50,7 @@ abstract class StartCommand
     public function __construct()
     {
         $this->log      = context()->get('log');
-        $this->route    = context()->get('route');
+        $this->route    = context()->get('apiRoute');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
@@ -113,7 +113,7 @@ abstract class StartCommand
             );
             $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             foreach ($services as $service) {
-                $this->log->info(sprintf('Register service [%s]', $service->getFirstNode()->getID()));
+                $this->log->info(sprintf('Register service [%s]', $service->getID()));
             }
             $this->registry->register(...$services);
         });
