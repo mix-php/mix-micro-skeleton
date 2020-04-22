@@ -9,8 +9,8 @@ use Mix\Grpc\Client\Dialer;
 use Mix\Micro\Hystrix\CircuitBreaker;
 use Mix\Tracing\Grpc\TracingClientMiddleware;
 use Mix\Tracing\Zipkin\Tracing;
+use Php\Micro\Grpc\Greeter\CarryClient;
 use Php\Micro\Grpc\Greeter\Request;
-use Php\Micro\Grpc\Greeter\SayClient;
 
 /**
  * Class CarryController
@@ -55,15 +55,15 @@ class CarryController
             // 调用rpc
             $tracer     = Tracing::extract($request->getContext());
             $middleware = new TracingClientMiddleware($tracer);
-            /** @var SayClient $client */
-            $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', SayClient::class, $middleware);
+            /** @var CarryClient $client */
+            $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', CarryClient::class, $middleware);
             $rpcRequest = new Request();
             $rpcRequest->setName($name);
-            $rpcResponse = $client->Hello($rpcRequest);
+            $rpcResponse = $client->Luggage($rpcRequest);
             return $rpcResponse->getMsg();
         }, function () use ($name) {
             // 返回本地数据或抛出异常
-            return sprintf('hello, %s', $name);
+            return sprintf('carry %s', $name);
         });
 
         $data = [
