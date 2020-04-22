@@ -98,7 +98,7 @@ abstract class StartCommand
                 $timer->clear();
             });
             $serviceFactory = new ServiceFactory();
-            $services       = $serviceFactory->createServicesFromJsonRpc($this->server);
+            $services       = $serviceFactory->createServiceFromJsonRpc($this->server);
             $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             foreach ($services as $service) {
                 $this->log->info(sprintf('Register service [%s]', $service->getID()));

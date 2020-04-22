@@ -106,7 +106,7 @@ abstract class StartCommand
                 $timer->clear();
             });
             $serviceFactory = new ServiceFactory();
-            $services       = $serviceFactory->createServicesFromAPI(
+            $services       = $serviceFactory->createServiceFromAPI(
                 $this->server,
                 $this->route,
                 'php.micro.api'
