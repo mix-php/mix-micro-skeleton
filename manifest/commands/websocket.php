@@ -2,7 +2,7 @@
 
 return [
 
-    'ws:webscoket:start' => [
+    'web:webscoket:start' => [
         \App\WebSocket\Commands\WebSocketCommand::class,
         'description' => "Start service",
         'options'     => [

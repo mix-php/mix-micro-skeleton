@@ -6,6 +6,10 @@ service Say {
 	rpc Hello(Request) returns (Response) {}
 }
 
+service Carry {
+	rpc Luggage(Request) returns (Response) {}
+}
+
 message Request {
 	string name = 1;
 }

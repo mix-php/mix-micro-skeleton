@@ -14,7 +14,7 @@ return [
             [
                 [
                     // 名称
-                    'name'                   => 'php.micro.jsonrpc.greeter',
+                    'name'                   => 'php.micro',
                     // 超时时间, 单位: 秒
                     'timeout'                => 1,
                     // 最大并发数，超过并发返回错误

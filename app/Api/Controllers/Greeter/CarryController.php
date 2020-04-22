@@ -51,7 +51,7 @@ class CarryController
         $name = $request->getAttribute('name', '?');
 
         // 使用熔断器调用 (gRPC)
-        $result = $this->breaker->do('php.micro.jsonrpc.greeter', function () use ($request, $name) {
+        $result = $this->breaker->do('php.micro', function () use ($request, $name) {
             // 调用rpc
             $tracer     = Tracing::extract($request->getContext());
             $middleware = new TracingClientMiddleware($tracer);
