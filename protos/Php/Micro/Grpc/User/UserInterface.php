@@ -14,10 +14,19 @@ interface UserInterface extends Grpc\ServiceInterface
 
     /**
     * @param Context $context
-    * @param Request $request
-    * @return Response
+    * @param AddRequest $request
+    * @return AddResponse
     *
     * @throws Grpc\Exception\InvokeException
     */
-    public function Add(Context $context, Request $request): Response;
+    public function Add(Context $context, AddRequest $request): AddResponse;
+
+    /**
+    * @param Context $context
+    * @param GetRequest $request
+    * @return GetResponse
+    *
+    * @throws Grpc\Exception\InvokeException
+    */
+    public function Get(Context $context, GetRequest $request): GetResponse;
 }

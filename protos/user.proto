@@ -3,15 +3,29 @@ syntax = "proto3";
 package php.micro.grpc.user;
 
 service User {
-	rpc Add(Request) returns (Response) {}
+	rpc Add(AddRequest) returns (AddResponse) {}
+	rpc Get(GetRequest) returns (GetResponse) {}
 }
 
-message Request {
+message Userinfo {
 	string name = 1;
 	string age = 2;
 	string email = 3;
 }
 
-message Response {
+message AddRequest {
+    Userinfo userinfo = 1;
+}
+
+message AddResponse {
 	string status = 1;
+}
+
+message GetRequest {
+	string id = 1;
+}
+
+message GetResponse {
+    string status = 1;
+    Userinfo userinfo = 2;
 }

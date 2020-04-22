@@ -6,8 +6,12 @@ use App\Common\Helpers\ResponseHelper;
 use App\Api\Forms\UserForm;
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
-use Mix\JsonRpc\Client\Dialer;
-use Mix\JsonRpc\Factory\RequestFactory;
+use Mix\Grpc\Client\Dialer;
+use Mix\Tracing\Grpc\TracingClientMiddleware;
+use Mix\Tracing\Zipkin\Tracing;
+use Php\Micro\Grpc\User\AddRequest;
+use Php\Micro\Grpc\User\UserClient;
+use Php\Micro\Grpc\User\Userinfo;
 
 /**
  * Class UserController
@@ -48,16 +52,21 @@ class UserController
         }
 
         // 调用rpc保存用户信息
-        $conn        = $this->dialer->dialFromService('php.micro.jsonrpc.user');
-        $rpcRequest  = (new RequestFactory)->createRequest('User.Add', [$form], 10001);
-        $rpcResponse = $conn->call($rpcRequest);
-        if ($rpcResponse->error) {
-            $error = $rpcResponse->error;
-            throw new \Exception(sprintf('RPC call failed: %s', $error->message), $error->code);
-        }
+        $tracer     = Tracing::extract($request->getContext());
+        $middleware = new TracingClientMiddleware($tracer);
+        /** @var UserClient $client */
+        $client   = $this->dialer->dialFromService('php.micro.grpc.user', UserClient::class, $middleware);
+        $userinfo = new Userinfo();
+        $userinfo->setName('xiaoming');
+        $userinfo->setAge('12');
+        $userinfo->setEmail('foo@bar.com');
+        $rpcRequest = new AddRequest();
+        $rpcRequest->setUserinfo($userinfo);
+        $rpcResponse = $client->Add($rpcRequest);
+        $status      = $rpcResponse->getStatus();
 
         // 响应
-        $content = ['code' => 0, 'message' => 'OK'];
+        $content = ['code' => 0, 'message' => $status];
         return ResponseHelper::json($response, $content);
     }
 

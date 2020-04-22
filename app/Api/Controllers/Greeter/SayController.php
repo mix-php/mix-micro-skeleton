@@ -30,11 +30,9 @@ class SayController
     public $breaker;
 
     /**
-     * FileController constructor.
-     * @param ServerRequest $request
-     * @param Response $response
+     * SayController constructor.
      */
-    public function __construct(ServerRequest $request, Response $response)
+    public function __construct()
     {
         $this->dialer  = context()->get(Dialer::class);
         $this->breaker = context()->get(CircuitBreaker::class);
@@ -51,7 +49,7 @@ class SayController
         $name = $request->getAttribute('name', '?');
 
         // 使用熔断器调用 (gRPC)
-        $result = $this->breaker->do('php.micro.grpc.greeter', function () use ($request, $name) {
+        $result = $this->breaker->do('php.micro', function () use ($request, $name) {
             // 调用rpc
             $tracer     = Tracing::extract($request->getContext());
             $middleware = new TracingClientMiddleware($tracer);

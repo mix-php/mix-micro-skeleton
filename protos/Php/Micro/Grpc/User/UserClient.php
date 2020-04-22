@@ -17,16 +17,30 @@ class UserClient extends \Grpc\BaseStub {
     }
 
     /**
-     * @param \Php\Micro\Grpc\User\Request $argument input argument
+     * @param \Php\Micro\Grpc\User\AddRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
-     * @return \Php\Micro\Grpc\User\Response
+     * @return \Php\Micro\Grpc\User\AddResponse
      */
-    public function Add(\Php\Micro\Grpc\User\Request $argument,
+    public function Add(\Php\Micro\Grpc\User\AddRequest $argument,
       $metadata = [], $options = []) {
         return $this->_simpleRequest('/php.micro.grpc.user.User/Add',
         $argument,
-        ['\Php\Micro\Grpc\User\Response', 'decode'],
+        ['\Php\Micro\Grpc\User\AddResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * @param \Php\Micro\Grpc\User\GetRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Php\Micro\Grpc\User\GetResponse
+     */
+    public function Get(\Php\Micro\Grpc\User\GetRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/php.micro.grpc.user.User/Get',
+        $argument,
+        ['\Php\Micro\Grpc\User\GetResponse', 'decode'],
         $metadata, $options);
     }
 

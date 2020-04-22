@@ -25,19 +25,11 @@ class CarryController
     public $dialer;
 
     /**
-     * @var CircuitBreaker
+     * CarryController constructor.
      */
-    public $breaker;
-
-    /**
-     * FileController constructor.
-     * @param ServerRequest $request
-     * @param Response $response
-     */
-    public function __construct(ServerRequest $request, Response $response)
+    public function __construct()
     {
-        $this->dialer  = context()->get(Dialer::class);
-        $this->breaker = context()->get(CircuitBreaker::class);
+        $this->dialer = context()->get(Dialer::class);
     }
 
     /**
@@ -45,30 +37,25 @@ class CarryController
      * @param ServerRequest $request
      * @param Response $response
      * @return Response
+     * @throws \PhpDocReader\AnnotationException
+     * @throws \ReflectionException
      */
     public function luggage(ServerRequest $request, Response $response)
     {
         $name = $request->getAttribute('name', '?');
 
-        // 使用熔断器调用 (gRPC)
-        $result = $this->breaker->do('php.micro', function () use ($request, $name) {
-            // 调用rpc
-            $tracer     = Tracing::extract($request->getContext());
-            $middleware = new TracingClientMiddleware($tracer);
-            /** @var CarryClient $client */
-            $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', CarryClient::class, $middleware);
-            $rpcRequest = new Request();
-            $rpcRequest->setName($name);
-            $rpcResponse = $client->Luggage($rpcRequest);
-            return $rpcResponse->getMsg();
-        }, function () use ($name) {
-            // 返回本地数据或抛出异常
-            return sprintf('carry %s', $name);
-        });
+        // 调用rpc
+        $tracer     = Tracing::extract($request->getContext());
+        $middleware = new TracingClientMiddleware($tracer);
+        /** @var CarryClient $client */
+        $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', CarryClient::class, $middleware);
+        $rpcRequest = new Request();
+        $rpcRequest->setName($name);
+        $rpcResponse = $client->Luggage($rpcRequest);
 
         $data = [
             'code'    => 0,
-            'message' => $result,
+            'message' => $rpcResponse->getMsg(),
         ];
         return ResponseHelper::json($response, $data);
     }
