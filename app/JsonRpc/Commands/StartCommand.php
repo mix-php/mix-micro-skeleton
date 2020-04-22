@@ -14,7 +14,7 @@ use Mix\JsonRpc\Server;
  * Class StartCommand
  * @package App\JsonRpc\Commands
  */
-class StartCommand
+abstract class StartCommand
 {
 
     /**
@@ -36,15 +36,6 @@ class StartCommand
      * @var Logger
      */
     public $log;
-
-    /**
-     * @var string[]
-     */
-    public $classes = [
-        \App\JsonRpc\Services\Greeter\SayService::class,
-        \App\JsonRpc\Services\CurlService::class,
-        \App\JsonRpc\Services\UserService::class,
-    ];
 
     /**
      * StartCommand constructor.
@@ -78,9 +69,16 @@ class StartCommand
         });
         // 监听配置
         $this->config->listen();
+        // 初始化
+        $this->init();
         // 启动服务器
         $this->start();
     }
+
+    /**
+     * Init
+     */
+    abstract public function init();
 
     /**
      * 启动服务器
@@ -90,10 +88,6 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        // 注册
-        foreach ($this->classes as $class) {
-            $this->server->register($class);
-        }
         // 服务注册
         $timer = Timer::new();
         $timer->tick(100, function () use ($timer) {
@@ -103,11 +97,13 @@ class StartCommand
             xdefer(function () use ($timer) {
                 $timer->clear();
             });
-            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             $serviceFactory = new ServiceFactory();
             $services       = $serviceFactory->createServicesFromJsonRpc($this->server);
+            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
+            foreach ($services as $service) {
+                $this->log->info(sprintf('Register service [%s]', $service->getID()));
+            }
             $this->registry->register(...$services);
-            $timer->clear();
         });
         // 启动
         $this->server->start();

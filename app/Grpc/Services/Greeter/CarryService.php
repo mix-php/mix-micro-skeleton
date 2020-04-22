@@ -26,7 +26,7 @@ class CarryService implements CarryInterface
     public function Luggage(Context $context, Request $request): Response
     {
         $response = new Response();
-        $response->setMsg(sprintf('carry, %s', $request->getName()));
+        $response->setMsg(sprintf('carry %s', $request->getName()));
         return $response;
     }
 
