@@ -2,8 +2,8 @@
 
 return [
 
-    'ws:start' => [
-        \App\WebSocket\Commands\StartCommand::class,
+    'ws:webscoket:start' => [
+        \App\WebSocket\Commands\WebSocketCommand::class,
         'description' => "Start service",
         'options'     => [
             [['d', 'daemon'], 'description' => "\tRun in the background"],

@@ -7,19 +7,17 @@ use Mix\Micro\Etcd\Configurator;
 use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
-use Mix\Http\Message\Factory\StreamFactory;
-use Mix\Http\Message\Response;
-use Mix\Http\Message\ServerRequest;
 use Mix\Log\Logger;
 use Mix\Http\Server\Server;
+use Mix\Micro\Route\Router;
 use Mix\WebSocket\Upgrader;
 
 /**
  * Class StartCommand
- * @package App\Tcp\Commands
+ * @package App\WebSocket\Commands
  * @author liu,jian <coder.keda@gmail.com>
  */
-class StartCommand
+abstract class StartCommand
 {
 
     /**
@@ -31,6 +29,11 @@ class StartCommand
      * @var Configurator
      */
     public $config;
+
+    /**
+     * @var Router
+     */
+    public $route;
 
     /**
      * @var Registry
@@ -48,18 +51,12 @@ class StartCommand
     public $upgrader;
 
     /**
-     * @var callable[]
-     */
-    public $patterns = [
-        '/websocket' => \App\WebSocket\Handlers\WebSocketHandler::class,
-    ];
-
-    /**
      * StartCommand constructor.
      */
     public function __construct()
     {
         $this->log      = context()->get('log');
+        $this->route    = context()->get('webRoute');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
@@ -88,9 +85,16 @@ class StartCommand
         });
         // 监听配置
         $this->config->listen();
+        // 初始化
+        $this->init();
         // 启动服务器
         $this->start();
     }
+
+    /**
+     * Init
+     */
+    abstract public function init();
 
     /**
      * 启动服务器
@@ -100,10 +104,6 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        // 设置处理程序
-        foreach (array_keys($this->patterns) as $pattern) {
-            $this->server->handle($pattern, [$this, 'handle']);
-        }
         // 注册服务
         $timer = Timer::new();
         $timer->tick(100, function () use ($timer) {
@@ -113,40 +113,20 @@ class StartCommand
             xdefer(function () use ($timer) {
                 $timer->clear();
             });
-            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
             $serviceFactory = new ServiceFactory();
             $services       = $serviceFactory->createServicesFromWeb(
                 $this->server,
-                null,
+                $this->route,
                 'php.micro.web'
             );
+            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
+            foreach ($services as $service) {
+                $this->log->info(sprintf('Register service [%s]', $service->getID()));
+            }
             $this->registry->register(...$services);
-            $timer->clear();
         });
         // 启动
-        $this->server->start();
-    }
-
-    /**
-     * 请求处理
-     * @param ServerRequest $request
-     * @param Response $response
-     */
-    public function handle(ServerRequest $request, Response $response)
-    {
-        try {
-            $conn = $this->upgrader->Upgrade($request, $response);
-        } catch (\Throwable $e) {
-            $response
-                ->withBody((new StreamFactory())->createStream('401 Unauthorized'))
-                ->withStatus(401)
-                ->end();
-            return;
-        }
-        $pathinfo = $request->getServerParams()['path_info'] ?: '/';
-        $class    = $this->patterns[$pathinfo];
-        $callback = new $class($conn);
-        call_user_func($callback);
+        $this->server->start($this->route);
     }
 
     /**
