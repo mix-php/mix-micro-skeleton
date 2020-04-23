@@ -39,7 +39,7 @@ class UserService implements UserInterface
     }
 
     /**
-     *
+     * Get
      * @param Context $context
      * @param GetRequest $request
      * @return GetResponse

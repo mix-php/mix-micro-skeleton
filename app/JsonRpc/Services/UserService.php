@@ -27,9 +27,38 @@ class UserService implements ServiceInterface
      */
     public function Add(Context $context, object $user): array
     {
-        $model = new UserModel();
-        $model->add($user);
-        return ['status' => 'success'];
+        $model  = new UserModel();
+        $result = $model->add($user);
+        if ($result) {
+            $status = 'success';
+        } else {
+            $status = 'fail';
+        }
+        return ['status' => $status];
+    }
+
+    /**
+     * Get
+     * @param Context $context
+     * @param object $user
+     * @return array
+     */
+    public function Get(Context $context, string $id): array
+    {
+        $model  = new UserModel();
+        $result = $model->get($id);
+        if ($result) {
+            $status   = 'success';
+            $userinfo = [
+                'name'  => $result['name'],
+                'age'   => $result['age'],
+                'email' => $result['email'],
+            ];
+        } else {
+            $status   = 'fail';
+            $userinfo = (object)[];
+        }
+        return ['status' => $status, 'userinfo' => $userinfo];
     }
 
 }

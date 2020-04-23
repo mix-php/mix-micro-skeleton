@@ -43,4 +43,15 @@ class UserModel
         return $insertId;
     }
 
+    /**
+     * 获取用户
+     * @param string $id
+     * @return array
+     */
+    public function get(string $id)
+    {
+        $db = $this->pool->getConnection();
+        return $db->table('user')->where(['id', '=', $id])->get();
+    }
+
 }
