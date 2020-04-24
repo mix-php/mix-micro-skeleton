@@ -6,7 +6,6 @@ use App\Common\Helpers\ResponseHelper;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\Grpc\Client\Dialer;
-use Mix\Micro\Hystrix\CircuitBreaker;
 use Mix\Tracing\Grpc\TracingClientMiddleware;
 use Mix\Tracing\Zipkin\Tracing;
 use Php\Micro\Grpc\Greeter\CarryClient;
