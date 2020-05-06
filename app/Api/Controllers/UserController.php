@@ -4,6 +4,7 @@ namespace App\Api\Controllers;
 
 use App\Common\Helpers\ResponseHelper;
 use App\Api\Forms\UserForm;
+use Mix\Context\Context;
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
 use Mix\Grpc\Client\Dialer;
@@ -54,15 +55,14 @@ class UserController
         // 调用rpc保存用户信息
         $tracer     = Tracing::extract($request->getContext());
         $middleware = new TracingClientMiddleware($tracer);
-        /** @var UserClient $client */
-        $client   = $this->dialer->dialFromService('php.micro.grpc.user', UserClient::class, $middleware);
-        $userinfo = new Userinfo();
+        $client     = new UserClient($this->dialer->dialFromService('php.micro.grpc.user', $middleware));
+        $userinfo   = new Userinfo();
         $userinfo->setName('xiaoming');
         $userinfo->setAge('12');
         $userinfo->setEmail('foo@bar.com');
         $rpcRequest = new AddRequest();
         $rpcRequest->setUserinfo($userinfo);
-        $rpcResponse = $client->Add($rpcRequest);
+        $rpcResponse = $client->Add(Context::new(), $rpcRequest);
         $status      = $rpcResponse->getStatus();
 
         // 响应

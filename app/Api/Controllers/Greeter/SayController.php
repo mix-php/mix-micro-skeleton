@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Greeter;
 
 use App\Common\Helpers\ResponseHelper;
+use Mix\Context\Context;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\Grpc\Client\Dialer;
@@ -53,11 +54,10 @@ class SayController
             // 调用rpc
             $tracer     = Tracing::extract($request->getContext());
             $middleware = new TracingClientMiddleware($tracer);
-            /** @var SayClient $client */
-            $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', SayClient::class, $middleware);
+            $client     = new SayClient($this->dialer->dialFromService('php.micro.grpc.greeter', $middleware));
             $rpcRequest = new Request();
             $rpcRequest->setName($name);
-            $rpcResponse = $client->Hello($rpcRequest);
+            $rpcResponse = $client->Hello(Context::new(), $rpcRequest);
             return $rpcResponse->getMsg();
         }, function () use ($name) {
             // 返回本地数据或抛出异常

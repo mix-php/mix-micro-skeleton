@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Greeter;
 
 use App\Common\Helpers\ResponseHelper;
+use Mix\Context\Context;
 use Mix\Http\Message\ServerRequest;
 use Mix\Http\Message\Response;
 use Mix\Grpc\Client\Dialer;
@@ -38,6 +39,7 @@ class CarryController
      * @return Response
      * @throws \PhpDocReader\AnnotationException
      * @throws \ReflectionException
+     * @throws \Mix\Grpc\Exception\InvokeException
      */
     public function luggage(ServerRequest $request, Response $response)
     {
@@ -46,11 +48,10 @@ class CarryController
         // 调用rpc
         $tracer     = Tracing::extract($request->getContext());
         $middleware = new TracingClientMiddleware($tracer);
-        /** @var CarryClient $client */
-        $client     = $this->dialer->dialFromService('php.micro.grpc.greeter', CarryClient::class, $middleware);
+        $client     = new CarryClient($this->dialer->dialFromService('php.micro.grpc.greeter', $middleware));
         $rpcRequest = new Request();
         $rpcRequest->setName($name);
-        $rpcResponse = $client->Luggage($rpcRequest);
+        $rpcResponse = $client->Luggage(Context::new(), $rpcRequest);
 
         $data = [
             'code'    => 0,

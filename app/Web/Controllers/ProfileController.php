@@ -3,6 +3,7 @@
 namespace App\Web\Controllers;
 
 use App\Common\Helpers\ResponseHelper;
+use Mix\Context\Context;
 use Mix\Grpc\Client\Dialer;
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
@@ -48,11 +49,10 @@ class ProfileController
         // 调用rpc获取用户信息
         $tracer     = Tracing::extract($request->getContext());
         $middleware = new TracingClientMiddleware($tracer);
-        /** @var UserClient $client */
-        $client     = $this->dialer->dialFromService('php.micro.grpc.user', UserClient::class, $middleware);
+        $client     = new UserClient($this->dialer->dialFromService('php.micro.grpc.user', $middleware));
         $rpcRequest = new GetRequest();
         $rpcRequest->setId($id);
-        $rpcResponse = $client->Get($rpcRequest);
+        $rpcResponse = $client->Get(Context::new(), $rpcRequest);
         $status      = $rpcResponse->getStatus();
         if ($status != 'success') {
             throw new \Exception('User not found');
