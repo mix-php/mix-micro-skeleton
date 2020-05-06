@@ -15,15 +15,16 @@ class TracingJsonRpcServerMiddleware extends TracingServerMiddleware
 
     /**
      * Get tracer
+     * @param string $serviceName
      * @return \OpenTracing\Tracer
      * @throws \PhpDocReader\AnnotationException
      * @throws \ReflectionException
      */
-    public function tracer()
+    public function tracer(string $serviceName)
     {
         /** @var \Mix\Tracing\Zipkin\Tracing $tracing */
         $tracing = context()->get(Tracing::class);
-        return $tracing->startTracer('JsonRpc', ServiceHelper::localIP());
+        return $tracing->startTracer($serviceName, ServiceHelper::localIP());
     }
 
 }
