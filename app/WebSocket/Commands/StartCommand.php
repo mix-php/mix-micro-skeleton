@@ -63,7 +63,7 @@ abstract class StartCommand
         $this->upgrader = new Upgrader();
 
         $this->log->withName('WEBSOCKET');
-        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
+        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

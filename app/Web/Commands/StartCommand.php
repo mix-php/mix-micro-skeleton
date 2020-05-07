@@ -56,7 +56,7 @@ abstract class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('WEB');
-        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/web.log', app()->basePath), 7);
+        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/web.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

@@ -32,7 +32,7 @@ class ConfigPutCommand
         $this->config = context()->get(Configurator::class);
 
         $this->log->withName('CONSOLE');
-        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/console.log', app()->basePath), 7);
+        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/console.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 

@@ -48,7 +48,7 @@ abstract class StartCommand
         $this->registry = context()->get(Registry::class);
 
         $this->log->withName('JSONRPC');
-        $handler = new \Monolog\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/jsonrpc.log', app()->basePath), 7);
+        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/jsonrpc.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 
