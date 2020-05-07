@@ -4,17 +4,17 @@ return [
 
     'api:greeter:start' => [
         \App\Api\Commands\GreeterCommand::class,
-        'description' => "Start service",
+        'usage' => "Start service",
         'options'     => [
-            [['d', 'daemon'], 'description' => "\tRun in the background"],
+            [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
     'api:user:start' => [
         \App\Api\Commands\UserCommand::class,
-        'description' => "Start service",
+        'usage' => "Start service",
         'options'     => [
-            [['d', 'daemon'], 'description' => "\tRun in the background"],
+            [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 

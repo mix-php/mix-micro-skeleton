@@ -4,11 +4,11 @@ return [
 
     'si:start' => [
         \App\SyncInvoke\Commands\StartCommand::class,
-        'description' => "\tStart service",
+        'usage' => "\tStart service",
         'options'     => [
-            [['d', 'daemon'], 'description' => "\tRun in the background"],
-            [['p', 'port'], 'description' => "\tListen to the specified port"],
-            [['r', 'reuse-port'], 'description' => "Reuse port in multiple processes"],
+            [['d', 'daemon'], 'usage' => "\tRun in the background"],
+            [['p', 'port'], 'usage' => "\tListen to the specified port"],
+            [['r', 'reuse-port'], 'usage' => "Reuse port in multiple processes"],
         ],
     ],
 
