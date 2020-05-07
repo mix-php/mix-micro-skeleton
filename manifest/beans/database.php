@@ -6,6 +6,8 @@ return [
     [
         // 名称
         'name'       => 'database',
+        // 作用域
+        'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
         'class'      => \Mix\Database\Database::class,
         // 初始方法

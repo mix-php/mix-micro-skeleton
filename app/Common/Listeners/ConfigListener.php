@@ -38,21 +38,19 @@ class ConfigListener implements ListenerInterface
                     app()->appDebug = (bool)$event->value;
                     break;
                 case '/mix/app/database':
-                    $db     = json_decode($event->value, true);
-                    $dialer = context()->getBeanDefinition(\Mix\Database\Pool\Dialer::class);
-                    foreach ($db as $key => $value) {
-                        $dialer->withPropertie($key, $value);
+                    $info       = json_decode($event->value, true);
+                    $definition = context()->getBeanDefinition('database');
+                    foreach ($info as $key => $value) {
+                        $definition->withPropertie($key, $value);
                     }
-                    $dbPool = context()->getBeanDefinition('dbPool');
-                    $dbPool->refresh();
+                    $definition->refresh();
                 case '/mix/app/redis':
-                    $redis  = json_decode($event->value, true);
-                    $dialer = context()->getBeanDefinition(\Mix\Redis\Pool\Dialer::class);
-                    foreach ($redis as $key => $value) {
-                        $dialer->withPropertie($key, $value);
+                    $info       = json_decode($event->value, true);
+                    $definition = context()->getBeanDefinition('redis');
+                    foreach ($info as $key => $value) {
+                        $definition->withPropertie($key, $value);
                     }
-                    $redisPool = context()->getBeanDefinition('redisPool');
-                    $redisPool->refresh();
+                    $definition->refresh();
             }
         }
     }

@@ -6,6 +6,8 @@ return [
     [
         // 名称
         'name'       => 'redis',
+        // 作用域
+        'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
         'class'      => \Mix\Redis\Redis::class,
         // 初始方法
