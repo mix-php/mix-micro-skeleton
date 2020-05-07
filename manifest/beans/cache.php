@@ -36,8 +36,8 @@ return [
         'class'      => \Mix\Cache\RedisHandler::class,
         // 属性注入
         'properties' => [
-            // 连接池
-            'pool'      => ['ref' => 'redisPool'],
+            // redis
+            'redis'      => ['ref' => 'redis'],
             // Key前缀
             'keyPrefix' => 'CACHE:',
         ],
