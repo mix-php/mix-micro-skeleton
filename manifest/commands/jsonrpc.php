@@ -2,7 +2,7 @@
 
 return [
 
-    'jrpc:greeter' => [
+    'jsonrpc:greeter' => [
         \App\JsonRpc\Commands\GreeterCommand::class,
         'usage' => "Start a micro service",
         'options'     => [
@@ -10,19 +10,19 @@ return [
         ],
     ],
 
-    'jrpc:curl' => [
+    'jsonrpc:curl' => [
         \App\JsonRpc\Commands\CurlCommand::class,
-        'usage' => "Start a micro service",
+        'usage' => "\tStart a micro service",
         'options'     => [
-            [['d', 'daemon'], 'usage' => "\tRun in the background"],
+            [['d', 'daemon'], 'usage' => "Run in the background"],
         ],
     ],
 
-    'jrpc:user' => [
+    'jsonrpc:user' => [
         \App\JsonRpc\Commands\UserCommand::class,
-        'usage' => "Start a micro service",
+        'usage' => "\tStart a micro service",
         'options'     => [
-            [['d', 'daemon'], 'usage' => "\tRun in the background"],
+            [['d', 'daemon'], 'usage' => "Run in the background"],
         ],
     ],
 
