@@ -21,12 +21,14 @@ return [
         ],
         // 属性注入
         'properties'      => [
+            // 名称空间
+            'namespace'    => '/micro/registry',
             // 服务注册生存时间
-            'registerTTL'    => 5,
+            'registerTTL'  => 5,
             // 服务监控最大空闲时间
-            'monitorMaxIdle' => 30,
+            'maxIdle'      => 30,
             // 负载均衡器
-            'loadBalancer'   => ['ref' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class],
+            'loadBalancer' => ['ref' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class],
         ],
     ],
 
@@ -38,9 +40,9 @@ return [
     // 配置中心
     [
         // 作用域
-        'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
+        'scope'           => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Micro\Etcd\Configurator::class,
+        'class'           => \Mix\Micro\Etcd\Configurator::class,
         // 构造函数注入
         'constructorArgs' => [
             // url
@@ -53,15 +55,11 @@ return [
             5,
         ],
         // 属性注入
-        'properties' => [
-            // 刷新间隔
-            'interval'   => 5,
+        'properties'      => [
             // 名称空间
-            'namespaces' => [
-                '/mix/app',
-            ],
-            // 事件调度器
-            'dispatcher' => ['ref' => 'event'],
+            'namespace' => '/micro/config',
+            // 刷新间隔
+            'interval'  => 5,
         ],
     ],
 

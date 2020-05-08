@@ -3,11 +3,13 @@
 namespace App\JsonRpc\Commands;
 
 use Mix\Concurrent\Timer;
+use Mix\Event\EventDispatcher;
+use Mix\Log\Logger;
+use Mix\Log\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
 use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
-use Mix\Log\Logger;
 use Mix\JsonRpc\Server;
 
 /**
@@ -46,9 +48,9 @@ abstract class StartCommand
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
-
+        // 设置日志处理器
         $this->log->withName('JSONRPC');
-        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/jsonrpc.log', app()->basePath), 7);
+        $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/jsonrpc.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 
@@ -68,7 +70,9 @@ abstract class StartCommand
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 监听配置
-        $this->config->listen();
+        /** @var $dispatcher EventDispatcher */
+        $dispatcher = context()->get('event');
+        $this->config->listen($dispatcher);
         // 初始化
         $this->init();
         // 启动服务器

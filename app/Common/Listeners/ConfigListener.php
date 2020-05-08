@@ -34,17 +34,17 @@ class ConfigListener implements ListenerInterface
     {
         if ($event instanceof PutEvent) {
             switch ($event->key) {
-                case '/mix/app/app_debug':
+                case '/micro/config/app_debug':
                     app()->appDebug = (bool)$event->value;
                     break;
-                case '/mix/app/database':
+                case '/micro/config/database':
                     $info       = json_decode($event->value, true);
                     $definition = context()->getBeanDefinition('database');
                     foreach ($info as $key => $value) {
                         $definition->withPropertie($key, $value);
                     }
                     $definition->refresh();
-                case '/mix/app/redis':
+                case '/micro/config/redis':
                     $info       = json_decode($event->value, true);
                     $definition = context()->getBeanDefinition('redis');
                     foreach ($info as $key => $value) {

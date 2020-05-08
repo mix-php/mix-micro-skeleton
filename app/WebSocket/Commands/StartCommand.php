@@ -3,11 +3,13 @@
 namespace App\WebSocket\Commands;
 
 use Mix\Concurrent\Timer;
+use Mix\Event\EventDispatcher;
+use Mix\Log\Logger;
+use Mix\Log\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
 use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
-use Mix\Log\Logger;
 use Mix\Http\Server\Server;
 use Mix\Micro\Route\Router;
 use Mix\WebSocket\Upgrader;
@@ -61,9 +63,9 @@ abstract class StartCommand
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
         $this->upgrader = new Upgrader();
-
+        // 设置日志处理器
         $this->log->withName('WEBSOCKET');
-        $handler = new \Mix\Log\Handler\RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
+        $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
         $this->log->pushHandler($handler);
     }
 
@@ -84,7 +86,9 @@ abstract class StartCommand
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 监听配置
-        $this->config->listen();
+        /** @var $dispatcher EventDispatcher */
+        $dispatcher = context()->get('event');
+        $this->config->listen($dispatcher);
         // 初始化
         $this->init();
         // 启动服务器
