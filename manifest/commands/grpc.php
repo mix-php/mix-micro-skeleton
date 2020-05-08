@@ -2,25 +2,25 @@
 
 return [
 
-    'grpc:greeter:start' => [
+    'grpc:greeter' => [
         \App\Grpc\Commands\GreeterCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
-    'grpc:curl:start' => [
+    'grpc:curl' => [
         \App\Grpc\Commands\CurlCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
-    'grpc:user:start' => [
+    'grpc:user' => [
         \App\Grpc\Commands\UserCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],

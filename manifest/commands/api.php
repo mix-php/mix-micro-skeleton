@@ -2,17 +2,17 @@
 
 return [
 
-    'api:greeter:start' => [
+    'api:greeter' => [
         \App\Api\Commands\GreeterCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
-    'api:user:start' => [
+    'api:user' => [
         \App\Api\Commands\UserCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],

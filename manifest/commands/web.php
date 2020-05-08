@@ -2,25 +2,25 @@
 
 return [
 
-    'web:index:start' => [
+    'web:index' => [
         \App\Web\Commands\IndexCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
-    'web:file:start' => [
+    'web:file' => [
         \App\Web\Commands\FileCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
     ],
 
-    'web:profile:start' => [
+    'web:profile' => [
         \App\Web\Commands\ProfileCommand::class,
-        'usage' => "Start service",
+        'usage' => "Start a micro service",
         'options'     => [
             [['d', 'daemon'], 'usage' => "\tRun in the background"],
         ],
