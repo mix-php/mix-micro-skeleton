@@ -5,21 +5,22 @@ return [
     // 服务中心
     [
         // 作用域
-        'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
+        'scope'           => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Micro\Etcd\Registry::class,
-        // 初始方法
-        'initMethod' => 'init',
+        'class'           => \Mix\Micro\Etcd\Registry::class,
+        // 构造函数注入
+        'constructorArgs' => [
+            // url
+            'http://127.0.0.1:2379/v3',
+            // user
+            '',
+            // password
+            '',
+            // timeout
+            5,
+        ],
         // 属性注入
-        'properties' => [
-            // 地址
-            'url'            => 'http://127.0.0.1:2379/v3',
-            // 超时
-            'timeout'        => 5,
-            // 用户
-            'user'           => '',
-            // 密码
-            'password'       => '',
+        'properties'      => [
             // 服务注册生存时间
             'registerTTL'    => 5,
             // 服务监控最大空闲时间
@@ -40,18 +41,19 @@ return [
         'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
         'class'      => \Mix\Micro\Etcd\Configurator::class,
-        // 初始方法
-        'initMethod' => 'init',
+        // 构造函数注入
+        'constructorArgs' => [
+            // url
+            'http://127.0.0.1:2379/v3',
+            // user
+            '',
+            // password
+            '',
+            // timeout
+            5,
+        ],
         // 属性注入
         'properties' => [
-            // 地址
-            'url'        => 'http://127.0.0.1:2379/v3',
-            // 超时
-            'timeout'    => 5,
-            // 用户
-            'user'       => '',
-            // 密码
-            'password'   => '',
             // 刷新间隔
             'interval'   => 5,
             // 名称空间
