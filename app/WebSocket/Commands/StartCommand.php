@@ -4,8 +4,8 @@ namespace App\WebSocket\Commands;
 
 use Mix\Concurrent\Timer;
 use Mix\Event\EventDispatcher;
-use Mix\Log\Logger;
-use Mix\Log\Handler\RotatingFileHandler;
+use Mix\Monolog\Logger;
+use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
 use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;

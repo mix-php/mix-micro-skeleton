@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Mix\Helper\ProcessHelper;
-use Mix\Log\Logger;
-use Mix\Log\Handler\RotatingFileHandler;
+use Mix\Monolog\Logger;
+use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
 use Mix\Concurrent\Timer;
 
