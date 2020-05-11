@@ -1,11 +1,6 @@
 ## Mix Micro Skeleton
 
-本项目是 MixPHP 微服务开发程序骨架，包含：
-
-> 每个模块中都包含开箱即用的范例代码
-
-- `JsonRpc` 开发 JSON-RPC 微服务
-- `SyncInvoke` 执行同步代码
+微服务开发程序骨架，包含微服务开发的大量范例代码
 
 ## 开发文档
 
