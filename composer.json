@@ -1,10 +1,11 @@
 {
-  "name": "mix/mix-skeleton",
-  "description": "Full-featured development skeleton",
+  "name": "mix/mix-micro-skeleton",
+  "description": "Microservice development skeleton",
   "type": "project",
   "keywords": [
     "mix",
-    "skeleton"
+    "skeleton",
+    "microservice"
   ],
   "homepage": "http://www.mixphp.cn/",
   "license": "Apache-2.0",
