@@ -14,12 +14,10 @@ MixPHP 开发指南：http://doc.mixphp.cn
 
 ## 快速开始
 
-推荐使用 [composer](https://www.phpcomposer.com/) 安装。
-
-安装最新版本：
+使用 [composer](https://www.phpcomposer.com/) 安装：
 
 ```shell
-composer create-project --prefer-dist mix/mix-micro-skeleton mix 2.1.*
+composer create-project --prefer-dist mix/mix-micro-skeleton mix ~2.2.0
 ```
 
 ## License
