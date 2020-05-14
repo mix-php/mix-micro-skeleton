@@ -18,7 +18,7 @@ class UserCommand extends StartCommand
         $this->route
             ->rule('/v2', [
                 // 分组路由规则
-                'rules'      => [
+                [
                     // 分组路由
                     'POST /user/create' => [
                         [\App\Api\Controllers\UserController::class, 'create'],

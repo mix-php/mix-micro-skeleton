@@ -4,7 +4,7 @@ return [
 
     'conf:sync' => [
         \App\Console\Commands\ConfigSyncCommand::class,
-        'usage'   => "\tSync config to config-server",
+        'usage' => "\tSync config to config-server",
     ],
 
 ];
