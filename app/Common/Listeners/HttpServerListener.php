@@ -49,11 +49,12 @@ class HttpServerListener implements ListenerInterface
             return;
         }
         $level   = $event->error ? 'warning' : 'info';
-        $message = '{time}|{method}|{url}|{error}';
+        $message = '{time}|{method}|{url}|{status}|{error}';
         $context = [
             'time'   => $event->time,
             'method' => $event->request->getMethod(),
             'url'    => $event->request->getUri()->__toString(),
+            'status' => $event->response->getStatusCode(),
             'error'  => $event->error,
         ];
         $this->log->log($level, $message, $context);
