@@ -2,7 +2,7 @@
 
 namespace App\WebSocket\Services;
 
-use Mix\Redis\Pool\ConnectionPool;
+use Mix\Redis\Redis;
 use Mix\Redis\Subscribe\Message;
 use Mix\Redis\Subscribe\Subscriber;
 use App\WebSocket\Exceptions\ExecutionException;
@@ -76,10 +76,9 @@ class JoinController
         }
 
         // 给其他订阅当前房间的连接发送加入消息
-        /** @var ConnectionPool $redisPool */
-        $redisPool = context()->get('redisPool');
-        $redis     = $redisPool->getConnection();
-        $message   = JsonRpcHelper::notification('message.update', [
+        /** @var Redis $redis */
+        $redis   = context()->get('redis');
+        $message = JsonRpcHelper::notification('message.update', [
             sprintf('%s joined the room', $model->name),
             $model->roomId,
         ]);

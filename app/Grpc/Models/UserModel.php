@@ -2,7 +2,7 @@
 
 namespace App\Grpc\Models;
 
-use Mix\Database\Pool\ConnectionPool;
+use Mix\Database\Database;
 use Php\Micro\Grpc\User\Userinfo;
 
 /**
@@ -14,16 +14,16 @@ class UserModel
 {
 
     /**
-     * @var ConnectionPool
+     * @var Database
      */
-    public $pool;
+    public $db;
 
     /**
      * UserModel constructor.
      */
     public function __construct()
     {
-        $this->pool = context()->get('dbPool');
+        $this->db = context()->get('database');
     }
 
     /**
@@ -33,14 +33,13 @@ class UserModel
      */
     public function add(Userinfo $userinfo)
     {
-        $db       = $this->pool->getConnection();
-        $status   = $db->insert('user', [
+        $db       = $this->db->insert('user', [
             'name'  => $userinfo->getName(),
             'age'   => $userinfo->getAge(),
             'email' => $userinfo->getEmail(),
-        ])->execute();
+        ]);
+        $status   = $db->execute();
         $insertId = $status ? $db->getLastInsertId() : false;
-        $db->release();
         return $insertId;
     }
 
@@ -51,8 +50,7 @@ class UserModel
      */
     public function get(string $id)
     {
-        $db = $this->pool->getConnection();
-        return $db->table('user')->where(['id', '=', $id])->get();
+        return $this->db->table('user')->where(['id', '=', $id])->get();
     }
 
 }

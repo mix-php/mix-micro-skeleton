@@ -2,7 +2,7 @@
 
 namespace App\JsonRpc\Models;
 
-use Mix\Database\Pool\ConnectionPool;
+use Mix\Database\Database;
 
 /**
  * Class UserModel
@@ -13,16 +13,16 @@ class UserModel
 {
 
     /**
-     * @var ConnectionPool
+     * @var Database
      */
-    public $pool;
+    public $db;
 
     /**
      * UserModel constructor.
      */
     public function __construct()
     {
-        $this->pool = context()->get('dbPool');
+        $this->db = context()->get('database');
     }
 
     /**
@@ -32,14 +32,13 @@ class UserModel
      */
     public function add(object $user)
     {
-        $db       = $this->pool->getConnection();
-        $status   = $db->insert('user', [
+        $db       = $this->db->insert('user', [
             'name'  => $user->name,
             'age'   => $user->age,
             'email' => $user->email,
-        ])->execute();
+        ]);
+        $status   = $db->execute();
         $insertId = $status ? $db->getLastInsertId() : false;
-        $db->release();
         return $insertId;
     }
 
@@ -50,8 +49,7 @@ class UserModel
      */
     public function get(string $id)
     {
-        $db = $this->pool->getConnection();
-        return $db->table('user')->where(['id', '=', $id])->get();
+        return $this->db->table('user')->where(['id', '=', $id])->get();
     }
 
 }
