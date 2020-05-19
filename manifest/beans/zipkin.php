@@ -7,7 +7,7 @@ return [
         // 作用域
         'scope'      => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'      => \Mix\Tracing\Zipkin\Tracing::class,
+        'class'      => \Mix\Tracing\Zipkin\Zipkin::class,
         // 属性注入
         'properties' => [
             // 地址

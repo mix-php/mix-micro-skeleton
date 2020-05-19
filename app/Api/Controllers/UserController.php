@@ -9,7 +9,7 @@ use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
 use Mix\Grpc\Client\Dialer;
 use Mix\Tracing\Grpc\TracingClientMiddleware;
-use Mix\Tracing\Zipkin\Tracing;
+use Mix\Tracing\Tracing;
 use Php\Micro\Grpc\User\AddRequest;
 use Php\Micro\Grpc\User\UserClient;
 use Php\Micro\Grpc\User\Userinfo;

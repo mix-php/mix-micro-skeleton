@@ -4,7 +4,7 @@ namespace App\Grpc\Middleware;
 
 use Mix\Micro\Register\Helper\ServiceHelper;
 use Mix\Tracing\Grpc\TracingServerMiddleware;
-use Mix\Tracing\Zipkin\Tracing;
+use Mix\Tracing\Zipkin\Zipkin;
 
 /**
  * Class TracingGrpcServerMiddleware
@@ -22,8 +22,8 @@ class TracingGrpcServerMiddleware extends TracingServerMiddleware
      */
     public function tracer(string $serviceName)
     {
-        /** @var \Mix\Tracing\Zipkin\Tracing $tracing */
-        $tracing = context()->get(Tracing::class);
+        /** @var \Mix\Tracing\Zipkin\Zipkin $tracing */
+        $tracing = context()->get(Zipkin::class);
         return $tracing->startTracer($serviceName, ServiceHelper::localIP());
     }
 

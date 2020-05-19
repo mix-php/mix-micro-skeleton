@@ -9,7 +9,7 @@ use Mix\Http\Message\Response;
 use Mix\Grpc\Client\Dialer;
 use Mix\Micro\Hystrix\CircuitBreaker;
 use Mix\Tracing\Grpc\TracingClientMiddleware;
-use Mix\Tracing\Zipkin\Tracing;
+use Mix\Tracing\Tracing;
 use Php\Micro\Grpc\Greeter\Request;
 use Php\Micro\Grpc\Greeter\SayClient;
 
