@@ -38,18 +38,25 @@ class ConfigListener implements ListenerInterface
                     app()->appDebug = (bool)$event->value;
                     break;
                 case '/micro/config/database':
-                    $info       = json_decode($event->value, true);
-                    $definition = context()->getBeanDefinition('database');
-                    foreach ($info as $key => $value) {
-                        $definition->withPropertie($key, $value);
-                    }
+                    $info            = json_decode($event->value, true);
+                    $definition      = context()->getBeanDefinition('database');
+                    $constructorArgs = $definition->getConstructorArgs();
+                    $definition->withConstructorArgs([
+                            $info['dsn'],
+                            $info['username'],
+                            $info['password'],
+                        ] + $constructorArgs);
                     $definition->refresh();
                 case '/micro/config/redis':
-                    $info       = json_decode($event->value, true);
-                    $definition = context()->getBeanDefinition('redis');
-                    foreach ($info as $key => $value) {
-                        $definition->withPropertie($key, $value);
-                    }
+                    $info            = json_decode($event->value, true);
+                    $definition      = context()->getBeanDefinition('redis');
+                    $constructorArgs = $definition->getConstructorArgs();
+                    $definition->withConstructorArgs([
+                            $info['host'],
+                            $info['port'],
+                            $info['password'],
+                            $info['database'],
+                        ] + $constructorArgs);
                     $definition->refresh();
             }
         }

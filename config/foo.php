@@ -15,7 +15,7 @@ return [
     '/redis'     => json_encode([
         'host'     => '127.0.0.1',
         'port'     => 6379,
-        'database' => 0,
         'password' => '',
+        'database' => 0,
     ]),
 ];
