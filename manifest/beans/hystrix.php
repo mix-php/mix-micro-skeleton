@@ -16,7 +16,7 @@ return [
                     // 名称
                     'name'                   => 'php.micro',
                     // 超时时间, 单位: 秒
-                    'timeout'                => 1,
+                    'timeout'                => 5,
                     // 最大并发数，超过并发返回错误
                     'maxConcurrentRequests'  => 5,
                     // 请求数量的阀值，用这些数量的请求来计算阀值
