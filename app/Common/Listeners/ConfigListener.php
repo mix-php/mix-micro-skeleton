@@ -47,6 +47,7 @@ class ConfigListener implements ListenerInterface
                             $info['password'],
                         ] + $constructorArgs);
                     $definition->refresh();
+                    break;
                 case '/micro/config/redis':
                     $info            = json_decode($event->value, true);
                     $definition      = context()->getBeanDefinition('redis');
@@ -58,6 +59,7 @@ class ConfigListener implements ListenerInterface
                             $info['database'],
                         ] + $constructorArgs);
                     $definition->refresh();
+                    break;
             }
         }
     }
