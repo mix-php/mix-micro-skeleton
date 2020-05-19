@@ -14,7 +14,7 @@ class UserCommand extends StartCommand
      */
     public function init()
     {
-        // 注册
+        // 注册处理程序
         $this->server->register(\App\Grpc\Services\UserService::class);
     }
 

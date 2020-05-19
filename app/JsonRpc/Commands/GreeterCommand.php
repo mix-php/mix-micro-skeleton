@@ -14,7 +14,7 @@ class GreeterCommand extends StartCommand
      */
     public function init()
     {
-        // 注册
+        // 注册处理程序
         $this->server->register(\App\JsonRpc\Services\Greeter\SayService::class);
         $this->server->register(\App\JsonRpc\Services\Greeter\CarryService::class);
     }
