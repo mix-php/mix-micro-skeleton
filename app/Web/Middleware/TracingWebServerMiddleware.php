@@ -22,9 +22,9 @@ class TracingWebServerMiddleware extends TracingServerMiddleware
      */
     public function tracer(string $serviceName)
     {
-        /** @var \Mix\Tracing\Zipkin\Zipkin $tracing */
-        $tracing = context()->get(Zipkin::class);
-        return $tracing->startTracer($serviceName, ServiceHelper::localIP());
+        /** @var Zipkin $zipkin */
+        $zipkin = context()->get(Zipkin::class);
+        return $zipkin->startTracer($serviceName, ServiceHelper::localIP());
     }
 
 }
