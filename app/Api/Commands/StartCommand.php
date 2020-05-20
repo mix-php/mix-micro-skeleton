@@ -3,7 +3,6 @@
 namespace App\Api\Commands;
 
 use App\Api\Route\Router;
-use Mix\Event\EventDispatcher;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
@@ -11,7 +10,6 @@ use Mix\Micro\Etcd\Configurator;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class StartCommand
@@ -47,11 +45,6 @@ abstract class StartCommand
     public $router;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    public $dispatcher;
-
-    /**
      * StartCommand constructor.
      */
     public function __construct()
@@ -83,9 +76,7 @@ abstract class StartCommand
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 监听配置
-        /** @var $dispatcher EventDispatcher */
-        $dispatcher = context()->get('event');
-        $this->config->listen($dispatcher);
+        $this->config->listen();
         // 初始化
         $this->init();
         // 启动服务器

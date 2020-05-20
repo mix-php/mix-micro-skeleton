@@ -57,9 +57,11 @@ return [
         // 属性注入
         'properties'      => [
             // 名称空间
-            'namespace' => '/micro/config',
+            'namespace'  => '/micro/config',
             // 刷新间隔
-            'interval'  => 5,
+            'interval'   => 5,
+            // 事件调度器
+            'dispatcher' => ['ref' => 'event'],
         ],
     ],
 

@@ -2,7 +2,6 @@
 
 namespace App\WebSocket\Commands;
 
-use Mix\Event\EventDispatcher;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
@@ -86,9 +85,7 @@ abstract class StartCommand
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
         // 监听配置
-        /** @var $dispatcher EventDispatcher */
-        $dispatcher = context()->get('event');
-        $this->config->listen($dispatcher);
+        $this->config->listen();
         // 初始化
         $this->init();
         // 启动服务器
