@@ -23,7 +23,7 @@ class ConfigSyncCommand
     /**
      * @var Logger
      */
-    public $log;
+    public $logger;
 
     /**
      * @var Timer
@@ -35,12 +35,12 @@ class ConfigSyncCommand
      */
     public function __construct()
     {
-        $this->log    = context()->get('log');
+        $this->logger = context()->get('logger');
         $this->config = context()->get(Configurator::class);
         // 设置日志处理器
-        $this->log->withName('CONSOLE');
+        $this->logger->withName('CONSOLE');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/console.log', app()->basePath), 7);
-        $this->log->pushHandler($handler);
+        $this->logger->pushHandler($handler);
     }
 
     /**
@@ -50,8 +50,8 @@ class ConfigSyncCommand
     {
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('Sync stop');
+            $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->logger->info('Sync stop');
             $this->timer->clear();
             $this->config->close();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
@@ -61,7 +61,7 @@ class ConfigSyncCommand
         // 可以通过两种方式实现与 git 仓库管理配置文件
         // 1. 在命令行程序中用定时器，定时同步配置到配置中心
         // 2. 写一个 api 接口，在 git webhook 中设置该接口，然后接口中使用 sync 方法同步配置到配置中心
-        $this->log->info('Sync start');
+        $this->logger->info('Sync start');
 
         // 定时同步配置到配置中心
         $path  = sprintf('%s/config', app()->basePath);

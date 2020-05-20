@@ -15,7 +15,7 @@ class ProfileCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->route
+        $this->router
             ->pattern('id', '[\d]+')
             ->rule('/profile/{id}', [
                 [\App\Web\Controllers\ProfileController::class, 'index'],

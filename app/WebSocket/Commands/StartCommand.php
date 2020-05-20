@@ -2,12 +2,11 @@
 
 namespace App\WebSocket\Commands;
 
-use Mix\Concurrent\Timer;
 use Mix\Event\EventDispatcher;
+use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
-use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
@@ -33,11 +32,6 @@ abstract class StartCommand
     public $config;
 
     /**
-     * @var Router
-     */
-    public $route;
-
-    /**
      * @var Registry
      */
     public $registry;
@@ -45,7 +39,13 @@ abstract class StartCommand
     /**
      * @var Logger
      */
-    public $log;
+    public $logger;
+
+    /**
+     * @var Router
+     */
+    public $router;
+
 
     /**
      * @var Upgrader
@@ -57,16 +57,16 @@ abstract class StartCommand
      */
     public function __construct()
     {
-        $this->log      = context()->get('log');
-        $this->route    = context()->get('webRoute');
+        $this->logger   = context()->get('logger');
+        $this->router   = context()->get('webRouter');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
         $this->upgrader = new Upgrader();
         // 设置日志处理器
-        $this->log->withName('WEBSOCKET');
+        $this->logger->withName('WEBSOCKET');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
-        $this->log->pushHandler($handler);
+        $this->logger->pushHandler($handler);
     }
 
     /**
@@ -77,8 +77,8 @@ abstract class StartCommand
     {
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('Server shutdown');
+            $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->logger->info('Server shutdown');
             $this->registry->close();
             $this->config->close();
             $this->server->shutdown();
@@ -108,29 +108,16 @@ abstract class StartCommand
     public function start()
     {
         $this->welcome();
-        // 注册服务
-        $timer = Timer::new();
-        $timer->tick(100, function () use ($timer) {
-            if (!$this->server->port) {
-                return;
-            }
-            xdefer(function () use ($timer) {
-                $timer->clear();
-            });
-            $serviceFactory = new ServiceFactory();
-            $services       = $serviceFactory->createServiceFromWeb(
-                $this->server,
-                $this->route,
-                'php.micro.web'
-            );
-            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
-            foreach ($services as $service) {
-                $this->log->info(sprintf('Register service [%s]', $service->getID()));
-            }
-            $this->registry->register(...$services);
-        });
-        // 启动
-        $this->server->start($this->route);
+        // Run
+        Micro::service(
+            Micro::name('php.micro.web'),
+            Micro::server($this->server),
+            Micro::router($this->router),
+            Micro::registry($this->registry),
+            Micro::logger($this->logger),
+            Micro::version('latest'),
+            Micro::metadata(['foo' => 'bar'])
+        )->run();
     }
 
     /**

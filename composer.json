@@ -39,6 +39,7 @@
     "mix/guzzle": "~2.2.0",
     "mix/grpc": "~2.2.0",
     "mix/json-rpc": "~2.2.0",
+    "mix/micro": "~2.2.0",
     "mix/micro-hystrix": "~2.2.0",
     "mix/micro-etcd": "~2.2.0",
     "mix/micro-route": "~2.2.0",

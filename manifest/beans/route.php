@@ -5,7 +5,7 @@ return [
     // Api路由
     [
         // 名称
-        'name'       => 'apiRoute',
+        'name'       => 'apiRouter',
         // 类路径
         'class'      => \App\Api\Route\Router::class,
         // 初始方法
@@ -28,7 +28,7 @@ return [
     // Web路由
     [
         // 名称
-        'name'       => 'webRoute',
+        'name'       => 'webRouter',
         // 类路径
         'class'      => \App\Api\Route\Router::class,
         // 初始方法

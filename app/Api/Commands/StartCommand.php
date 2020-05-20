@@ -3,15 +3,15 @@
 namespace App\Api\Commands;
 
 use App\Api\Route\Router;
-use Mix\Concurrent\Timer;
 use Mix\Event\EventDispatcher;
+use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Configurator;
-use Mix\Micro\Etcd\Factory\ServiceFactory;
 use Mix\Micro\Etcd\Registry;
 use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class StartCommand
@@ -39,27 +39,32 @@ abstract class StartCommand
     /**
      * @var Logger
      */
-    public $log;
+    public $logger;
 
     /**
      * @var Router
      */
-    public $route;
+    public $router;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    public $dispatcher;
 
     /**
      * StartCommand constructor.
      */
     public function __construct()
     {
-        $this->log      = context()->get('log');
-        $this->route    = context()->get('apiRoute');
+        $this->logger   = context()->get('log');
+        $this->router   = context()->get('apiRouter');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);
         $this->registry = context()->get(Registry::class);
         // 设置日志处理器
-        $this->log->withName('API');
+        $this->logger->withName('API');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/api.log', app()->basePath), 7);
-        $this->log->pushHandler($handler);
+        $this->logger->pushHandler($handler);
     }
 
     /**
@@ -70,8 +75,8 @@ abstract class StartCommand
     {
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('Server shutdown');
+            $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->logger->info('Server shutdown');
             $this->registry->close();
             $this->config->close();
             $this->server->shutdown();
@@ -100,29 +105,16 @@ abstract class StartCommand
     public function start()
     {
         $this->welcome();
-        // 服务注册
-        $timer = Timer::new();
-        $timer->tick(100, function () use ($timer) {
-            if (!$this->server->port) {
-                return;
-            }
-            xdefer(function () use ($timer) {
-                $timer->clear();
-            });
-            $serviceFactory = new ServiceFactory();
-            $services       = $serviceFactory->createServiceFromAPI(
-                $this->server,
-                $this->route,
-                'php.micro.api'
-            );
-            $this->log->info(sprintf('Server started [%s:%d]', $this->server->host, $this->server->port));
-            foreach ($services as $service) {
-                $this->log->info(sprintf('Register service [%s]', $service->getID()));
-            }
-            $this->registry->register(...$services);
-        });
-        // 启动
-        $this->server->start($this->route);
+        // Run
+        Micro::service(
+            Micro::name('php.micro.api'),
+            Micro::server($this->server),
+            Micro::router($this->router),
+            Micro::registry($this->registry),
+            Micro::logger($this->logger),
+            Micro::version('latest'),
+            Micro::metadata(['foo' => 'bar'])
+        )->run();
     }
 
     /**

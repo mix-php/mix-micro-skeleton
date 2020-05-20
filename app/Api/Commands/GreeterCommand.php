@@ -15,7 +15,7 @@ class GreeterCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->route
+        $this->router
             ->rule('/greeter/say/hello', [
                 [\App\Api\Controllers\Greeter\SayController::class, 'hello'],
                 'middleware' => [\App\Api\Middleware\ActionMiddleware::class],

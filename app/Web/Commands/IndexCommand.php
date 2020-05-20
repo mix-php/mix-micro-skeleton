@@ -15,7 +15,7 @@ class IndexCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->route
+        $this->router
             ->rule('/index', [
                 [\App\Web\Controllers\IndexController::class, 'index'],
                 'middleware' => [\App\Web\Middleware\ActionMiddleware::class],

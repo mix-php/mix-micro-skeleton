@@ -19,7 +19,7 @@ class WebSocketCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->route
+        $this->router
             ->rule('/websocket', [
                 [$this, 'handle'],
             ])
