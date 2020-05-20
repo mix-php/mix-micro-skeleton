@@ -24,19 +24,19 @@ class StartCommand
     /**
      * @var Logger
      */
-    public $log;
+    public $logger;
 
     /**
      * StartCommand constructor.
      */
     public function __construct()
     {
-        $this->log    = context()->get('log');
+        $this->logger = context()->get('logger');
         $this->server = context()->get(Server::class);
         // 设置日志处理器
-        $this->log->withName('SYNCINVOKE');
+        $this->logger->withName('SYNCINVOKE');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/syncinvoke.log', app()->basePath), 7);
-        $this->log->pushHandler($handler);
+        $this->logger->pushHandler($handler);
     }
 
     /**
@@ -56,8 +56,8 @@ class StartCommand
         }
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->log->info('Received signal [{signal}]', ['signal' => $signal]);
-            $this->log->info('Server shutdown');
+            $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
+            $this->logger->info('Server shutdown');
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
@@ -72,7 +72,7 @@ class StartCommand
     public function start()
     {
         $this->welcome();
-        $this->log->info('Server start');
+        $this->logger->info('Server start');
         $this->server->start();
     }
 

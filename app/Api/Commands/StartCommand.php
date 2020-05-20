@@ -49,7 +49,7 @@ abstract class StartCommand
      */
     public function __construct()
     {
-        $this->logger   = context()->get('log');
+        $this->logger   = context()->get('logger');
         $this->router   = context()->get('apiRouter');
         $this->server   = context()->get(Server::class);
         $this->config   = context()->get(Configurator::class);

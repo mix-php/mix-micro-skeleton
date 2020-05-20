@@ -16,14 +16,14 @@ class GrpcServerListener implements ListenerInterface
     /**
      * @var LoggerInterface
      */
-    public $log;
+    public $logger;
 
     /**
      * JsonRpcListener constructor.
      */
     public function __construct()
     {
-        $this->log = context()->get('log');
+        $this->logger = context()->get('logger');
     }
 
     /**
@@ -56,7 +56,7 @@ class GrpcServerListener implements ListenerInterface
             'method'  => $event->method,
             'error'   => $event->error,
         ];
-        $this->log->log($level, $message, $context);
+        $this->logger->log($level, $message, $context);
     }
 
 }
