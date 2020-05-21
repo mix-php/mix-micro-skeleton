@@ -24,7 +24,7 @@ class Router extends \Mix\Micro\Route\Router
             'code'    => $exception->getCode(),
             'type'    => get_class($exception),
         ]);
-        $response->withStatus(404)->end();
+        $response->withStatus(404)->send();
     }
 
     /**
@@ -39,7 +39,7 @@ class Router extends \Mix\Micro\Route\Router
             'code'    => $exception->getCode(),
             'type'    => get_class($exception),
         ]);
-        $response->withStatus(500)->end();
+        $response->withStatus(500)->send();
     }
 
 }
