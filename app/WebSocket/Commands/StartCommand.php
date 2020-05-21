@@ -2,12 +2,12 @@
 
 namespace App\WebSocket\Commands;
 
+use Mix\Helper\ProcessHelper;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
-use Mix\Micro\Etcd\Configurator;
+use Mix\Micro\Etcd\Config;
 use Mix\Micro\Etcd\Registry;
-use Mix\Helper\ProcessHelper;
 use Mix\Http\Server\Server;
 use Mix\Micro\Route\Router;
 use Mix\WebSocket\Upgrader;
@@ -26,7 +26,7 @@ abstract class StartCommand
     public $server;
 
     /**
-     * @var Configurator
+     * @var Config
      */
     public $config;
 
@@ -45,7 +45,6 @@ abstract class StartCommand
      */
     public $router;
 
-
     /**
      * @var Upgrader
      */
@@ -59,14 +58,26 @@ abstract class StartCommand
         $this->logger   = context()->get('logger');
         $this->router   = context()->get('webRouter');
         $this->server   = context()->get(Server::class);
-        $this->config   = context()->get(Configurator::class);
+        $this->config   = context()->get(Config::class);
         $this->registry = context()->get(Registry::class);
         $this->upgrader = new Upgrader();
+
         // 设置日志处理器
         $this->logger->withName('WEBSOCKET');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/websocket.log', app()->basePath), 7);
         $this->logger->pushHandler($handler);
+
+        // 监听配置
+        $this->config->listen();
+
+        // 初始化
+        $this->init();
     }
+
+    /**
+     * Init
+     */
+    abstract public function init();
 
     /**
      * 主函数
@@ -84,33 +95,17 @@ abstract class StartCommand
             $this->upgrader->destroy();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
-        // 监听配置
-        $this->config->listen();
-        // 初始化
-        $this->init();
-        // 启动服务器
-        $this->start();
-    }
 
-    /**
-     * Init
-     */
-    abstract public function init();
-
-    /**
-     * 启动服务器
-     * @throws \Swoole\Exception
-     * @throws \Exception
-     */
-    public function start()
-    {
         $this->welcome();
+
         // Run
         Micro::service(
+            Micro::signal(false),
             Micro::name('php.micro.web'),
             Micro::server($this->server),
             Micro::router($this->router),
             Micro::registry($this->registry),
+            Micro::config($this->config),
             Micro::logger($this->logger),
             Micro::version('latest'),
             Micro::metadata(['foo' => 'bar'])
@@ -134,7 +129,7 @@ abstract class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-websocket');
+        println('Server         Name:      micro-websocket');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

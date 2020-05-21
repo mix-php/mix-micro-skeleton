@@ -5,9 +5,8 @@ namespace App\JsonRpc\Commands;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
-use Mix\Micro\Etcd\Configurator;
+use Mix\Micro\Etcd\Config;
 use Mix\Micro\Etcd\Registry;
-use Mix\Helper\ProcessHelper;
 use Mix\JsonRpc\Server;
 
 /**
@@ -23,7 +22,7 @@ abstract class StartCommand
     public $server;
 
     /**
-     * @var Configurator
+     * @var Config
      */
     public $config;
 
@@ -44,35 +43,19 @@ abstract class StartCommand
     {
         $this->logger   = context()->get('logger');
         $this->server   = context()->get(Server::class);
-        $this->config   = context()->get(Configurator::class);
+        $this->config   = context()->get(Config::class);
         $this->registry = context()->get(Registry::class);
+
         // 设置日志处理器
         $this->logger->withName('JSONRPC');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/jsonrpc.log', app()->basePath), 7);
         $this->logger->pushHandler($handler);
-    }
 
-    /**
-     * 主函数
-     * @throws \Swoole\Exception
-     */
-    public function main()
-    {
-        // 捕获信号
-        ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
-            $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
-            $this->logger->info('Server shutdown');
-            $this->registry->close();
-            $this->config->close();
-            $this->server->shutdown();
-            ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
-        });
         // 监听配置
         $this->config->listen();
+
         // 初始化
         $this->init();
-        // 启动服务器
-        $this->start();
     }
 
     /**
@@ -81,17 +64,18 @@ abstract class StartCommand
     abstract public function init();
 
     /**
-     * 启动服务器
+     * 主函数
      * @throws \Swoole\Exception
-     * @throws \Exception
      */
-    public function start()
+    public function main()
     {
         $this->welcome();
+
         // Run
         Micro::service(
             Micro::server($this->server),
             Micro::registry($this->registry),
+            Micro::config($this->config),
             Micro::logger($this->logger),
             Micro::version('latest'),
             Micro::metadata(['foo' => 'bar'])
@@ -115,7 +99,7 @@ abstract class StartCommand
 
 
 EOL;
-        println('Server         Name:      mix-jsonrpc');
+        println('Server         Name:      micro-jsonrpc');
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");

@@ -42,7 +42,7 @@ return [
         // 作用域
         'scope'           => \Mix\Bean\BeanDefinition::SINGLETON,
         // 类路径
-        'class'           => \Mix\Micro\Etcd\Configurator::class,
+        'class'           => \Mix\Micro\Etcd\Config::class,
         // 构造函数注入
         'constructorArgs' => [
             // url

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Mix\Helper\ProcessHelper;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
-use Mix\Micro\Etcd\Configurator;
+use Mix\Micro\Etcd\Config;
 use Mix\Concurrent\Timer;
 
 /**
@@ -16,7 +16,7 @@ class ConfigSyncCommand
 {
 
     /**
-     * @var Configurator
+     * @var Config
      */
     public $config;
 
@@ -36,7 +36,8 @@ class ConfigSyncCommand
     public function __construct()
     {
         $this->logger = context()->get('logger');
-        $this->config = context()->get(Configurator::class);
+        $this->config = context()->get(Config::class);
+
         // 设置日志处理器
         $this->logger->withName('CONSOLE');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/console.log', app()->basePath), 7);

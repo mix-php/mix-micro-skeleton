@@ -33,6 +33,7 @@ class StartCommand
     {
         $this->logger = context()->get('logger');
         $this->server = context()->get(Server::class);
+
         // 设置日志处理器
         $this->logger->withName('SYNCINVOKE');
         $handler = new RotatingFileHandler(sprintf('%s/runtime/logs/syncinvoke.log', app()->basePath), 7);
@@ -54,6 +55,7 @@ class StartCommand
         if ($reusePort) {
             $this->server->reusePort = $reusePort;
         }
+
         // 捕获信号
         ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
             $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
@@ -61,17 +63,10 @@ class StartCommand
             $this->server->shutdown();
             ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
         });
-        // 启动服务器
-        $this->start();
-    }
 
-    /**
-     * 启动服务器
-     * @throws \Swoole\Exception
-     */
-    public function start()
-    {
         $this->welcome();
+
+        // 启动服务器
         $this->logger->info('Server start');
         $this->server->start();
     }
