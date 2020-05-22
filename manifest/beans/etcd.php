@@ -28,13 +28,8 @@ return [
             // 服务监控最大空闲时间
             'maxIdle'      => 30,
             // 负载均衡器
-            'loadBalancer' => ['ref' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class],
+            'loadBalancer' => new \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer,
         ],
-    ],
-
-    // 负载均衡器
-    [
-        'class' => \Mix\Micro\Etcd\LoadBalancer\RoundRobinBalancer::class,
     ],
 
     // 配置中心
@@ -57,9 +52,9 @@ return [
         // 属性注入
         'properties'      => [
             // 名称空间
-            'namespace'  => '/micro/config',
+            'namespace' => '/micro/config',
             // 刷新间隔
-            'interval'   => 5,
+            'interval'  => 5,
         ],
     ],
 
