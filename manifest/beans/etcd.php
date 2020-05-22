@@ -60,8 +60,6 @@ return [
             'namespace'  => '/micro/config',
             // 刷新间隔
             'interval'   => 5,
-            // 事件调度器
-            'dispatcher' => ['ref' => 'event'],
         ],
     ],
 
