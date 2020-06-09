@@ -26,7 +26,7 @@ class UserCommand extends StartCommand
      */
     public function routeDefinition(RouteCollector $collector)
     {
-        $collector->group('/greeter/say/hello',
+        $collector->group('/v2',
             function (RouteCollector $collector) {
                 $collector->post('/user/create',
                     [\App\Api\Controllers\UserController::class, 'create'],
