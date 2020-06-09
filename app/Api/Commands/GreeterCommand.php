@@ -2,6 +2,8 @@
 
 namespace App\Api\Commands;
 
+use Mix\FastRoute\RouteCollector;
+
 /**
  * Class GreeterCommand
  * @package App\Api\Commands
@@ -15,16 +17,23 @@ class GreeterCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->router
-            ->rule('/greeter/say/hello', [
-                [\App\Api\Controllers\Greeter\SayController::class, 'hello'],
-                'middleware' => [\App\Api\Middleware\ActionMiddleware::class],
-            ])
-            ->rule('/greeter/carry/luggage', [
-                [\App\Api\Controllers\Greeter\CarryController::class, 'luggage'],
-                'middleware' => [\App\Api\Middleware\ActionMiddleware::class],
-            ])
-            ->parse();
+        $this->router->parse([$this, 'routeDefinition']);
+    }
+
+    /**
+     * 路由定义
+     * @param RouteCollector $collector
+     */
+    public function routeDefinition(RouteCollector $collector)
+    {
+        $collector->get('/greeter/say/hello',
+            [\App\Api\Controllers\Greeter\SayController::class, 'hello'],
+            [\App\Api\Middleware\ActionMiddleware::class]
+        );
+        $collector->get('/greeter/carry/luggage',
+            [\App\Api\Controllers\Greeter\CarryController::class, 'luggage'],
+            [\App\Api\Middleware\ActionMiddleware::class]
+        );
     }
 
 }

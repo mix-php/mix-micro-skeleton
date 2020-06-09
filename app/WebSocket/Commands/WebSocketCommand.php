@@ -2,6 +2,7 @@
 
 namespace App\WebSocket\Commands;
 
+use Mix\FastRoute\RouteCollector;
 use Mix\Http\Message\Factory\StreamFactory;
 use Mix\Http\Message\Response;
 use Mix\Http\Message\ServerRequest;
@@ -19,11 +20,16 @@ class WebSocketCommand extends StartCommand
     public function init()
     {
         // 路由配置
-        $this->router
-            ->rule('/websocket', [
-                [$this, 'handle'],
-            ])
-            ->parse();
+        $this->router->parse([$this, 'routeDefinition']);
+    }
+
+    /**
+     * 路由定义
+     * @param RouteCollector $collector
+     */
+    public function routeDefinition(RouteCollector $collector)
+    {
+        $collector->get('/websocket', [$this, 'handle']);
     }
 
     /**

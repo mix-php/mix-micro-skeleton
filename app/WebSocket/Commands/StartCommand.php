@@ -2,6 +2,7 @@
 
 namespace App\WebSocket\Commands;
 
+use App\Web\Route\Router;
 use Mix\Helper\ProcessHelper;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
@@ -9,7 +10,6 @@ use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Config;
 use Mix\Micro\Etcd\Registry;
 use Mix\Http\Server\Server;
-use Mix\Micro\Route\Router;
 use Mix\WebSocket\Upgrader;
 
 /**
