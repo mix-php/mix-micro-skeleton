@@ -99,7 +99,7 @@ abstract class StartCommand
         $this->welcome();
 
         // Run
-        Micro::service(
+        Micro::newService(
             Micro::signal(false),
             Micro::name('php.micro.web'),
             Micro::server($this->server),

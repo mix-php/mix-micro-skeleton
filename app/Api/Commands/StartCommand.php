@@ -80,7 +80,7 @@ abstract class StartCommand
         $this->welcome();
 
         // Run
-        Micro::service(
+        Micro::newService(
             Micro::name('php.micro.api'),
             Micro::server($this->server),
             Micro::router($this->router),

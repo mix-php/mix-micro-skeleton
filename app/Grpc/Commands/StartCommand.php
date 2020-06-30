@@ -72,7 +72,7 @@ abstract class StartCommand
         $this->welcome();
 
         // Run
-        Micro::service(
+        Micro::newService(
             Micro::server($this->server),
             Micro::registry($this->registry),
             Micro::config($this->config),
