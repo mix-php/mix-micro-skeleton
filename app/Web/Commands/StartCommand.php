@@ -60,7 +60,7 @@ abstract class StartCommand
         $this->logger->pushHandler($handler);
 
         // 监听配置
-        $this->config->listen(context()->get('dispatcher'));
+        $this->config->listen(context()->get('eventDispatcher'));
 
         // 初始化
         $this->init();
