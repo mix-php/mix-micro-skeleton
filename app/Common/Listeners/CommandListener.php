@@ -5,7 +5,7 @@ namespace App\Common\Listeners;
 use Mix\Console\CommandLine\Flag;
 use Mix\Console\Event\CommandBeforeExecuteEvent;
 use Mix\Event\ListenerInterface;
-use Mix\Helper\ProcessHelper;
+use Mix\Process\Process;
 
 /**
  * Class CommandListener
@@ -41,7 +41,7 @@ class CommandListener implements ListenerInterface
                 case \App\JsonRpc\Commands\StartCommand::class:
                 case \App\SyncInvoke\Commands\StartCommand::class:
                     if (Flag::bool(['d', 'daemon'], false)) {
-                        ProcessHelper::daemon();
+                        Process::daemon();
                     }
                     break;
             }
