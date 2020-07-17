@@ -3,13 +3,13 @@
 namespace App\WebSocket\Commands;
 
 use App\Web\Route\Router;
-use Mix\Helper\ProcessHelper;
 use Mix\Micro\Micro;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Config;
 use Mix\Micro\Etcd\Registry;
 use Mix\Http\Server\Server;
+use Mix\Signal\SignalNotify;
 use Mix\WebSocket\Upgrader;
 
 /**
@@ -86,14 +86,16 @@ abstract class StartCommand
     public function main()
     {
         // 捕获信号
-        ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
+        $notify = new SignalNotify(SIGINT, SIGTERM, SIGQUIT);
+        xgo(function () use ($notify) {
+            $signal = $notify->channel()->pop();
             $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
             $this->logger->info('Server shutdown');
             $this->registry->close();
             $this->config->close();
             $this->server->shutdown();
             $this->upgrader->destroy();
-            ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
+            $notify->stop();
         });
 
         $this->welcome();

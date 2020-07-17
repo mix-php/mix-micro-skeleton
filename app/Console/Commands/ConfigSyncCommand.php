@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use Mix\Helper\ProcessHelper;
 use Mix\Monolog\Logger;
 use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Micro\Etcd\Config;
-use Mix\Concurrent\Timer;
+use Mix\Signal\SignalNotify;
+use Mix\Time\Ticker;
+use Mix\Time\Time;
 
 /**
  * Class ConfigSyncCommand
@@ -26,9 +27,9 @@ class ConfigSyncCommand
     public $logger;
 
     /**
-     * @var Timer
+     * @var Ticker
      */
-    public $timer;
+    public $ticker;
 
     /**
      * ConfigPutCommand constructor.
@@ -50,27 +51,34 @@ class ConfigSyncCommand
     public function main()
     {
         // 捕获信号
-        ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], function ($signal) {
+        $notify = new SignalNotify(SIGINT, SIGTERM, SIGQUIT);
+        xgo(function () use ($notify) {
+            $signal = $notify->channel()->pop();
             $this->logger->info('Received signal [{signal}]', ['signal' => $signal]);
             $this->logger->info('Sync stop');
-            $this->timer->clear();
+            $this->ticker->stop();
             $this->config->close();
-            ProcessHelper::signal([SIGINT, SIGTERM, SIGQUIT], null);
+            $notify->stop();
         });
 
         // 同步配置文件到配置中心
-        // 可以通过两种方式实现与 git 仓库管理配置文件
+        // 可以通过两种方式实现与 git 仓库的配置文件同步
         // 1. 在命令行程序中用定时器，定时同步配置到配置中心
         // 2. 写一个 api 接口，在 git webhook 中设置该接口，然后接口中使用 sync 方法同步配置到配置中心
         $this->logger->info('Sync start');
 
         // 定时同步配置到配置中心
-        $path  = sprintf('%s/config', app()->basePath);
-        $timer = Timer::new();
-        $timer->tick(5000, function () use ($path) {
-            $this->config->sync($path);
+        $ticker = $this->ticker = Time::newTicker(5 * Time::SECOND);
+        xgo(function () use ($ticker) {
+            while (true) {
+                $ts = $ticker->channel()->pop();
+                if (!$ts) {
+                    return;
+                }
+                $path = sprintf('%s/config', app()->basePath);
+                $this->config->sync($path);
+            }
         });
-        $this->timer = $timer;
     }
 
 }
