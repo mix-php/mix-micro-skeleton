@@ -5,7 +5,7 @@ namespace App\Common\Listeners;
 use Mix\Console\CommandLine\Flag;
 use Mix\Console\Event\CommandBeforeExecuteEvent;
 use Mix\Event\ListenerInterface;
-use Mix\Process\Process;
+use Mix\Console\Process;
 
 /**
  * Class CommandListener
@@ -37,13 +37,8 @@ class CommandListener implements ListenerInterface
         // 事件触发后，会执行该方法
         // 守护处理
         if ($event instanceof CommandBeforeExecuteEvent) {
-            switch ($event->command) {
-                case \App\JsonRpc\Commands\StartCommand::class:
-                case \App\SyncInvoke\Commands\StartCommand::class:
-                    if (Flag::bool(['d', 'daemon'], false)) {
-                        Process::daemon();
-                    }
-                    break;
+            if (Flag::bool(['d', 'daemon'], false)) {
+                Process::daemon();
             }
         }
     }
