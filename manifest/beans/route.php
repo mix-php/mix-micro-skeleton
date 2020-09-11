@@ -12,7 +12,7 @@ return [
         'constructorArgs' => [
             // routeDefinitionCallback
             null,
-            // middleware
+            // global middleware
             [\App\Api\Middleware\TracingApiServerMiddleware::class, \App\Api\Middleware\GlobalMiddleware::class],
         ],
     ],
@@ -27,7 +27,7 @@ return [
         'constructorArgs' => [
             // routeDefinitionCallback
             null,
-            // middleware
+            // global middleware
             [\App\Web\Middleware\TracingWebServerMiddleware::class, \App\Web\Middleware\GlobalMiddleware::class],
         ],
     ],
