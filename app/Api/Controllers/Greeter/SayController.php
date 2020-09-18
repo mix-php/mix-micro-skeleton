@@ -57,7 +57,7 @@ class SayController
             $client     = new SayClient($this->dialer->dialFromService('php.micro.grpc.greeter', $middleware));
             $rpcRequest = new Request();
             $rpcRequest->setName($name);
-            $rpcResponse = $client->Hello(Context::new(), $rpcRequest);
+            $rpcResponse = $client->Hello(new Context(), $rpcRequest);
             return $rpcResponse->getMsg();
         }, function () use ($name) {
             // 返回本地数据或抛出异常

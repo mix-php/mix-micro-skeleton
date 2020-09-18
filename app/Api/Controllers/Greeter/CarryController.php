@@ -51,7 +51,7 @@ class CarryController
         $client     = new CarryClient($this->dialer->dialFromService('php.micro.grpc.greeter', $middleware));
         $rpcRequest = new Request();
         $rpcRequest->setName($name);
-        $rpcResponse = $client->Luggage(Context::new(), $rpcRequest);
+        $rpcResponse = $client->Luggage(new Context(), $rpcRequest);
 
         $data = [
             'code'    => 0,

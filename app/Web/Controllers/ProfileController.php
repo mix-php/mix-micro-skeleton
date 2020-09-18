@@ -52,7 +52,7 @@ class ProfileController
         $client     = new UserClient($this->dialer->dialFromService('php.micro.grpc.user', $middleware));
         $rpcRequest = new GetRequest();
         $rpcRequest->setId($id);
-        $rpcResponse = $client->Get(Context::new(), $rpcRequest);
+        $rpcResponse = $client->Get(new Context(), $rpcRequest);
         $status      = $rpcResponse->getStatus();
         if ($status != 'success') {
             throw new \Exception('User not found');

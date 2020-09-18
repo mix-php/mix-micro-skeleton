@@ -62,7 +62,7 @@ class UserController
         $userinfo->setEmail('foo@bar.com');
         $rpcRequest = new AddRequest();
         $rpcRequest->setUserinfo($userinfo);
-        $rpcResponse = $client->Add(Context::new(), $rpcRequest);
+        $rpcResponse = $client->Add(new Context(), $rpcRequest);
         $status      = $rpcResponse->getStatus();
 
         // 响应
